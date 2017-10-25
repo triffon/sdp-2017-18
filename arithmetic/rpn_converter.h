@@ -3,13 +3,13 @@
 #include <iostream>
 #include "lstack.cpp"
 
-
+template <typename StreamType = std::ostream>
 class RPNConverter {
 private:
   using OpStack     = LinkedStack<char>;
 
   OpStack opstack;
-  std::ostream& rpns;
+  StreamType& rpns;
 
   int priority(char op) {
     switch (op) {
@@ -30,7 +30,7 @@ private:
   }
 
 public:
-  RPNConverter(std::ostream& _rpns = std::cout) : rpns(_rpns) {}
+  RPNConverter(StreamType& _rpns = std::cout) : rpns(_rpns) { }
 
   void flush();
 

@@ -1,10 +1,9 @@
 #ifndef _RPN_CALCULATOR
 #define _RPN_CALCULATOR
 
-#include <iostream>
 #include "lstack.cpp"
 
-class RPNCalculator : public std::ostream {
+class RPNCalculator {
 private:
   
   using NumberStack = LinkedStack<double>;

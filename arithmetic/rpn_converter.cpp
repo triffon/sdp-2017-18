@@ -1,6 +1,7 @@
 #include "rpn_converter.h"
 
-void RPNConverter::consumeChar(char c) {
+template <typename StreamType>
+void RPNConverter<StreamType>::consumeChar(char c) {
   if (std::isdigit(c))
       rpns << c;
     else if (c == ')') {
@@ -24,7 +25,8 @@ void RPNConverter::consumeChar(char c) {
 
 }
 
-void RPNConverter::flush() {
+template <typename StreamType>
+void RPNConverter<StreamType>::flush() {
   while (!opstack.empty())
     rpns << opstack.pop();
 }

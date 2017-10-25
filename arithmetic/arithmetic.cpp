@@ -19,7 +19,7 @@ double Arithmetic::calculateRPN(std::string rpn) {
 std::string Arithmetic::toRPN(std::string expr) {
   std::istringstream exprs(expr);
   std::ostringstream rpns;
-  RPNConverter rpnc(rpns);
+  RPNConverter<> rpnc(rpns);
   char c;
   while (exprs >> c)
     rpnc << c;
@@ -30,7 +30,13 @@ std::string Arithmetic::toRPN(std::string expr) {
 }
 
 double Arithmetic::calculateExpr(std::string expr) {
-  return calculateRPN(toRPN(expr));
+  //  return calculateRPN(toRPN(expr));
+  std::istringstream exprs(expr);
+  char c;
+  while (exprs >> c)
+    *this << c;
+  rpnconv.flush();
+  return result();
 }
 
 

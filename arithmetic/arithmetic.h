@@ -3,14 +3,14 @@
 
 #include <string>
 #include "lstack.cpp"
-#include "rpn_converter.h"
+#include "rpn_converter.cpp"
 #include "rpn_calculator.h"
 
 class Arithmetic {
 
 private:
   RPNCalculator rpncalc;
-  RPNConverter rpnconv;
+  RPNConverter<RPNCalculator> rpnconv;
   
   void consumeChar(char c) {
     rpnconv << c;
@@ -29,7 +29,7 @@ public:
     return ar;
   }
 
-  Arithmetic() : rpnconv(rpncalc) {}
+  Arithmetic() : rpnconv(rpncalc) { }
 
   double result() const {
     return rpncalc.result();
