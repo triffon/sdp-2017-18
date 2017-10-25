@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.7)
+project(horse)
+file(GLOB SOURCES "*.cpp")
+set(CMAKE_BUILD_TYPE Debug)
+include_directories(../stack)
+add_executable(horse ${SOURCES})
