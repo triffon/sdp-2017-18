@@ -56,6 +56,10 @@ public:
 	// поглеждане на елемента на върха на стека
 	T peek() const;
 
+  	// поглеждане на елемента на върха на стека
+        // с възможност за промяна
+        T& peek();
+
 	LinkedStack& operator+=(T const& x) {
 		push(x);
 		return *this;
@@ -83,7 +87,7 @@ T LinkedStack<T>::pop() {
 	if (empty()) {
 		// Стекът е празен
 		std::cerr << "Опит за изключване на елемент от празен стек!\n";
-		return 0;
+		return T();
 	}
 	StackElement<T>* p = top;
 	top = top->next;
@@ -97,9 +101,15 @@ T LinkedStack<T>::peek() const {
 	if (empty()) {
 		// Стекът е празен
 		std::cerr << "Опит за достъп до върха на празен стек!\n";
-		return 0;
+		return T();
 	}
 	return top->data;
+}
+
+template <typename T>
+T& LinkedStack<T>::peek() {
+  // TODO: проверка за празен стек!
+  return top->data;
 }
 
 template <typename T>
