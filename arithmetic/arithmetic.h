@@ -3,38 +3,18 @@
 
 #include <string>
 #include "lstack.cpp"
+#include "rpn_converter.h"
+#include "rpn_calculator.h"
 
 class Arithmetic {
 
 private:
-
-  // typedef LinkedStack<double> NumberStack;
-  using NumberStack = LinkedStack<double>;
-  using OpStack     = LinkedStack<char>;
-
-  NumberStack stack;
-  OpStack opstack;
+  RPNCalculator rpncalc;
+  RPNConverter rpnconv;
   
-  bool isDigit(char c) {
-    return '0' <= c && c <= '9';
+  void consumeChar(char c) {
+    rpnconv << c;
   }
-
-  int toDigit(char c) {
-    return c - '0';
-  }
-
-  int priority(char op) {
-    switch (op) {
-    case '+':
-    case '-':return 1;
-    case '*':
-    case '/':return 2;
-    case '^':return 3;
-    }
-    return 0;
-  }
-
-  void applyOperation(char op);
 
 public:
 
@@ -43,6 +23,18 @@ public:
   std::string toRPN(std::string expr);
 
   double calculateExpr(std::string expr);
+
+  friend Arithmetic& operator<<(Arithmetic& ar, char c) {
+    ar.consumeChar(c);
+    return ar;
+  }
+
+  Arithmetic() : rpnconv(rpncalc) {}
+
+  double result() const {
+    return rpncalc.result();
+  }
+
 };
 
 #endif
