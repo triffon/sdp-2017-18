@@ -50,6 +50,8 @@ public:
     T x = front->data;
     QueueElement<T>* p = front;
     front = p->next;
+    if (front == nullptr)
+      back = nullptr;
     delete p;
     return x;
   }
