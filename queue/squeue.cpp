@@ -1,7 +1,7 @@
 #include <iostream>
 #include "queue.h"
 
-const int MAX = 100;
+const int MAX = 105;
 
 template <typename T>
 class SQueue : public Queue<T> {
@@ -11,7 +11,7 @@ private:
 
   // проверка дали опашката е запълнена
   bool full() const {
-    return back == MAX - 1;
+    return (back + 2) % MAX == front;
   }
   
 public:
@@ -21,7 +21,7 @@ public:
   
   // проверка за празнота на опашка
   bool empty() const {
-    return front > back;
+    return (back + 1) % MAX == front;
   }
 
   // включване на елемент на края на опашката
@@ -30,8 +30,8 @@ public:
       std::cerr << "Опит за включване в пълна опашка!\n";
       return false;
     }
-      
-    a[++back] = x;
+
+    a[++back %= MAX] = x;
     return true;
   }
 
@@ -42,7 +42,9 @@ public:
       return T();
     }
 
-    return a[front++];
+    T const& x = a[front++];
+    front %= MAX;
+    return x;
   }   
 
   // достъп до първия елемент на опашката
