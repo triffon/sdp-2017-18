@@ -74,4 +74,4 @@ public:
     return front->data;
   }
     
-}
+};
