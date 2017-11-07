@@ -17,10 +17,43 @@ private:
   QueueElement<T> *front, *back;
 
   T error;
+
+  void copy(LQueue const& q) {
+    QueueElement<T>* p = q.front;
+    while (p != nullptr) {
+      enqueue(p->data);
+      p = p->next;
+    }
+  }
+
+  void clean() {
+    while (!empty())
+      dequeue();
+  }
+
   
 public:
   // конструиране на празна опашка
   LQueue() : front(nullptr), back(nullptr) {}
+
+  // конструктор за копиране
+  LQueue(LQueue const& q) : front(nullptr), back(nullptr) {
+    copy(q);
+  }
+
+  // операция за присвояване
+  LQueue& operator=(LQueue const& q) {
+    if (this != &q) {
+      clean();
+      copy(q);
+    }
+    return *this;
+  }
+
+  // деструктор
+  ~LQueue() {
+    clean();
+  }
   
   // проверка за празнота на опашка
   bool empty() const {

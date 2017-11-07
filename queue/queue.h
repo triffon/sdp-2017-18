@@ -2,6 +2,9 @@
  АТД опашка
 */
 
+#ifndef _QUEUE_H
+#define _QUEUE_H
+
 template <typename T>
 class Queue {
 public:
@@ -20,3 +23,5 @@ public:
   // достъп до първия елемент на опашката с възможност за промяна
   virtual T& head() = 0;
 };
+
+#endif
