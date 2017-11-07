@@ -6,7 +6,7 @@ struct QueueElement {
 
   QueueElement(T const& _data, QueueElement* _next = nullptr) :
     data(_data), next(_next) {}
-  
+
   T data;
   QueueElement* next;
 };
@@ -31,7 +31,7 @@ private:
       dequeue();
   }
 
-  
+
 public:
   // конструиране на празна опашка
   LQueue() : front(nullptr), back(nullptr) {}
@@ -54,7 +54,7 @@ public:
   ~LQueue() {
     clean();
   }
-  
+
   // проверка за празнота на опашка
   bool empty() const {
     return back == nullptr;
@@ -71,7 +71,7 @@ public:
       front = p;
     back = p;
     return true;
-  } 
+  }
 
   // изключване на елемент от началото на опашката
   T dequeue() {
@@ -79,7 +79,7 @@ public:
       std::cerr << "Опит за изключване от празна опашка!\n";
       return T();
     }
-    
+
     T x = front->data;
     QueueElement<T>* p = front;
     front = p->next;
@@ -108,5 +108,11 @@ public:
 
     return front->data;
   }
-    
+
+  void print(std::ostream& os = std::cout) const {
+    LQueue<T> copy = *this;
+    while (!copy.empty())
+      os << copy.dequeue() << ' ';
+    os << std::endl;
+  }
 };

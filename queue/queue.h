@@ -24,4 +24,7 @@ public:
   virtual T& head() = 0;
 };
 
+template <typename T>
+T minQueue(Queue<T>& q, T const& sentinel = T());
+
 #endif

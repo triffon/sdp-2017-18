@@ -60,3 +60,21 @@ TEST_CASE("Queue", Queue_NoShareAfterAssignment) {
   for(int i = 1; i <= 100; i++)
     Assert::AreEqual(q2.dequeue(), i);
 }
+
+TEST_CASE("Queue", Queue_minQueue) {
+  TestQueue<int> q;
+  q.enqueue(5);
+  q.enqueue(6);
+  q.enqueue(3);
+  q.enqueue(1);
+  q.enqueue(2);
+  q.enqueue(4);
+  q.enqueue(3);
+  Assert::AreEqual(minQueue(q, -1), 1);
+  Assert::AreEqual(minQueue(q, -1), 2);
+  Assert::AreEqual(minQueue(q, -1), 3);
+  Assert::AreEqual(minQueue(q, -1), 3);
+  Assert::AreEqual(minQueue(q, -1), 4);
+  Assert::AreEqual(minQueue(q, -1), 5);
+  Assert::AreEqual(minQueue(q, -1), 6);
+}
