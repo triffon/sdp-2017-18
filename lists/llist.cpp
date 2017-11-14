@@ -19,7 +19,6 @@ class LinkedList {
 private:
 
   using LLE = LinkedListElement<T>;
-  using I = LinkedListIterator<T>;
   
   LLE *front, *back;
 
@@ -28,6 +27,8 @@ private:
   void clean();
 
 public:
+
+  using I = LinkedListIterator<T>;
 
   // създаване на празен списък
   LinkedList();
@@ -61,6 +62,46 @@ public:
 
   // достъп до елемент на позиция
   T getAt(I) const;
+
+  // началото на списъка
+  I begin() const;
+
+  // краят на списъка
+  I end() const;
 };
+
+template <typename T>
+class LinkedListIterator {
+private:
+
+  using LLE = LinkedListElement<T>;
+  
+  LLE* ptr;
+
+public:
+
+  using I = LinkedListIterator<T>;
+
+  // конструктор по указател
+  LinkedListIterator(LLE* _ptr = nullptr) : ptr(_ptr) {}
+
+  // няма нужда от голяма четворка!
+
+  // следваща позиция
+  I next() const;
+
+  // предишна позиция
+  I prev() const;
+
+  // достъп до елемент с право на промяна
+  T& get() const;
+
+  // достъп до елемент без право на промяна
+  T const& getConst() const;
+
+  // проверка за валидност
+  bool valid() const;
+};
+
 
 #endif
