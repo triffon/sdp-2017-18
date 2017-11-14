@@ -1,6 +1,8 @@
 #ifndef __LLIST_CPP
 #define __LLIST_CPP
 
+#include <iostream>
+
 template <typename T>
 struct LinkedListElement {
 
@@ -54,10 +56,40 @@ public:
   }
 
   // вмъкване преди позиция
-  bool insertBefore(T const&, I = begin());
+  bool insertBefore(T const& x, I it = begin()) {
+    // засега позволяваме само включване в началото
+    if (it != begin())
+      return false;
+
+    LLE* p = new LLE(x, front);
+    if (empty())
+      // ако списъкът е бил празен, тогава трябва back също да сочи към p
+      back = p;
+    front = p;
+
+    return true;
+  }
 
   // вмъкване след позиция
-  bool insertAfter(T const&, I = end());
+  bool insertAfter(T const& x, I it = end()) {    
+    if (it == end() && empty()) {
+      // включване на първи елемент в празен списък
+      front = back = new LLE(x);
+      return true;
+    } else {
+      if (!it)
+        return false;
+      // it е валиден итератор
+
+      // включване след произволна позиция
+      // ако it == end(), тогава it.ptr == back, а it.next().ptr == nullptr
+      LLE* p = new LLE(x, it.next().ptr);
+      it.ptr->next = p;
+      if (it == end())
+        back = p;
+    }
+    return true;
+  }
 
   // изключване на елемент на позиция
   bool deleteAt(T& x, I it) {
@@ -122,6 +154,16 @@ public:
     return deleteAt(x, end());
   }
 
+  // синтактична захар
+  LinkedList& operator+=(T const& x) {
+    insertEnd(x);
+  }
+
+  void print(std::ostream& os = std::cout) const {
+    for(I it = begin(); it; ++it)
+      os << *it << ' ';
+    os << std::endl;
+  }
 };
 
 
@@ -133,9 +175,12 @@ private:
   
   LLE* ptr;
 
+  //  static T error;
+
 public:
 
   using I = LinkedListIterator<T>;
+  friend class LinkedList<T>;
 
   // конструктор по указател
   LinkedListIterator(LLE* _ptr = nullptr) : ptr(_ptr) {}
@@ -143,19 +188,32 @@ public:
   // няма нужда от голяма четворка!
 
   // следваща позиция
-  I next() const;
+  I next() const {
+    // считаме, че итераторът е валиден
+    // if (!valid())
+    //  return *this;
+    
+    return I(ptr->next);
+  }
 
   // предишна позиция
   I prev() const;
 
   // достъп до елемент с право на промяна
-  T& get() const;
+  T& get() const {
+    // допускаме, че итераторът е валиден
+    // if (!valid())
+    //  return error;
+    return ptr->data;
+  }
 
   // достъп до елемент без право на промяна
   T const& getConst() const;
 
   // проверка за валидност
-  bool valid() const;
+  bool valid() const {
+    return ptr != nullptr;
+  }
 
   // сравнение на два итератора
   bool operator==(I const& it) const {
@@ -165,7 +223,30 @@ public:
   bool operator!=(I const& it) const {
     return !(*this == it);
   }
+
+  // синтактична захар
+
+  // *it <-> it.get()
+  T& operator*() const {
+    return get();
+  }
+
+  // it++ <-> it = it.next(), връща старата стойност на it
+  I operator++(int) {
+    I prev = *this;
+    ++(*this);
+    return prev;
+  }
   
+  // ++it <-> it = it.next(), връща новата стойност на it
+  I& operator++() {
+    return *this = next();
+  }
+
+  // it <-> it.valid()
+  operator bool() const {
+    return valid();
+  }
 };
 
 
