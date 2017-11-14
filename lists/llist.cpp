@@ -24,14 +24,18 @@ private:
 
   void copy(LinkedList const&);
 
-  void clean();
+  void clean() {
+    T tmp;
+    while(!empty())
+      deleteBegin(tmp);
+  }
 
 public:
 
   using I = LinkedListIterator<T>;
 
   // създаване на празен списък
-  LinkedList();
+  LinkedList() : front(nullptr), back(nullptr) {}
 
   // конструктор за копиране
   LinkedList(LinkedList const&);
@@ -40,19 +44,44 @@ public:
   LinkedList& operator=(LinkedList const&);
 
   // деструктор
-  ~LinkedList();
+  ~LinkedList() {
+    clean();
+  }
 
   // проверка дали списък е празен
-  bool empty() const;
+  bool empty() const {
+    return front == nullptr;
+  }
 
   // вмъкване преди позиция
-  bool insertBefore(T const&, I);
+  bool insertBefore(T const&, I = begin());
 
   // вмъкване след позиция
-  bool insertAfter(T const&, I);
+  bool insertAfter(T const&, I = end());
 
   // изключване на елемент на позиция
-  bool deleteAt(T&, I);
+  bool deleteAt(T& x, I it) {
+    // засега позволяваме само изключване от началото на списък
+    if (it != begin())
+      return false;
+
+    // изключване на елемент от началото на списъка
+
+    // не можем да изключваме от празен списък
+    if (empty())
+      return false;
+    // списъкът не е празен
+    // front != nullptr
+
+    x = front->data;
+    LLE* p = front;
+    front = front->next;
+    if (front == nullptr)
+      back = nullptr;
+    delete p;
+
+    return true;
+  }
 
   // изключване на елемент преди позиция
   bool deleteBefore(T&, I);
@@ -64,11 +93,37 @@ public:
   T getAt(I) const;
 
   // началото на списъка
-  I begin() const;
+  I begin() const {
+    return I(front);
+  }
 
   // краят на списъка
-  I end() const;
+  I end() const {
+    return I(back);
+  }
+
+  // вмъкване в началото на списък
+  void insertBegin(T const& x) {
+    insertBefore(x, begin());
+  }
+
+  // вмъкване в края на списък
+  void insertEnd(T const& x) {
+    insertAfter(x, end());
+  }
+
+  // изтриване на първия елемент
+  bool deleteBegin(T& x) {
+    return deleteAt(x, begin());
+  }
+
+  // изтриване на последния елемент
+  bool deleteEnd(T& x) {
+    return deleteAt(x, end());
+  }
+
 };
+
 
 template <typename T>
 class LinkedListIterator {
@@ -101,6 +156,16 @@ public:
 
   // проверка за валидност
   bool valid() const;
+
+  // сравнение на два итератора
+  bool operator==(I const& it) const {
+    return ptr == it.ptr;
+  }
+
+  bool operator!=(I const& it) const {
+    return !(*this == it);
+  }
+  
 };
 
 
