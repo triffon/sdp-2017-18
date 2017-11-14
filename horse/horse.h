@@ -10,6 +10,7 @@ using Position = std::pair<int, int>;
 using Path     = LinkedStack<Position>;
 using StackFrame = LinkedStack<Position>;
 using Stack    = LinkedStack<StackFrame>;
+using Step     = std::pair<Position, Position>;
 
 class HorseWalker {
 private:
@@ -29,6 +30,8 @@ public:
 
   bool findPathStack(Position start, Position end);
 
+  bool findPathQueue(Position start, Position end);
+
   void printBoard() const;
 
   void printPath() const;
@@ -37,5 +40,11 @@ public:
 std::ostream& operator<<(std::ostream& os, Position const& pos) {
   return os << '(' << pos.first << ',' << pos.second << ')';
 }
+
+std::ostream& operator<<(std::ostream& os, Step const& step) {
+  return os << '[' << step.first << "->" << step.second << ']';
+}
+
+
 
 #endif

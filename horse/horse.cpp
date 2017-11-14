@@ -1,4 +1,5 @@
 #include "lstack.cpp"
+#include "lqueue.cpp"
 #include "horse.h"
 #include <cmath>
 
@@ -81,7 +82,7 @@ bool HorseWalker::findPathStack(Position start, Position end) {
     // "лошо" дъно: несупех
     if (!insideBoard(current.first) ||
         !insideBoard(current.second) ||
-        chessBoard[current.first][current.second]) {;
+        chessBoard[current.first][current.second]) {
       // махаме кандидата от стековата рамка
       currentFrame.pop();
       // Дали това беше последният кандидат в стековата рамка?
@@ -134,12 +135,73 @@ bool HorseWalker::findPathStack(Position start, Position end) {
   return false;
 }
 
+bool HorseWalker::findPathQueue(Position start, Position end) {
+  LQueue<Position> q;
+  q.enqueue(start);
+  LinkedStack<Step> history;
+
+  Position current;
+  while (!q.empty() && (current = q.dequeue()) != end) {
+    // да проверим дали current е валидна позиция?
+    if (insideBoard(current.first) &&
+        insideBoard(current.second) &&
+        !chessBoard[current.first][current.second]) {
+    
+      // стъпваме на current, отбелязваме, че сме стъпили
+      std::clog << "Разглеждаме " << current << std::endl;
+      chessBoard[current.first][current.second] = true;
+      
+      // генерираме всички възможни следващи ходове
+      // да ги добавим в опашката за разглеждане
+      for(int dx = 2; dx >= -2; dx--)
+        if (dx != 0)
+          //      for(int sign = -1; sign <= 1; sign += 2)
+          for(int sign : {1, -1}) {
+            int dy = sign * (3 - abs(dx));
+            Position newcurrent(current.first + dx, current.second + dy);            
+            q.enqueue(newcurrent);
+
+            // записваме стъпката в историята
+            history.push(Step(current, newcurrent));
+          }
+    }
+  }
+
+  if (current == end) {
+    std::cout << "Намерихме път!\n";
+
+    // да изведем историята
+    LinkedStack<Step> historyCopy = history;
+    while (!historyCopy.empty())
+      std::clog << historyCopy.pop() << ' ';
+    std::clog << std::endl;
+    
+    while (!history.empty()) {
+      Step step = history.pop();
+      if (step.second == current) {
+        // значи сме дошли от step.first
+        path.push(current);
+        // връшаме се една стъпка назад
+        current = step.first;
+      }
+    }
+    // добавяме и първия елемент в пътя
+    path.push(current);
+
+    printPath();
+
+    return true;
+  }
+  return false;
+}
+
 
 int main() {
   HorseWalker hw(4);
   //  hw.findPathRec({0, 0}, {3, 2});
   //  hw.findPathStack({0, 0}, {0, 0});
   // hw.findPathStack({0, 0}, {1, 2});
-  hw.findPathStack({0, 0}, {3, 2});
+  // hw.findPathStack({0, 0}, {3, 2});
+  hw.findPathQueue({0, 0}, {3, 2});
   return 0;
 }
