@@ -26,6 +26,7 @@ private:
 
   void copy(LinkedList const&);
 
+  // O(n) по време, O(1) по памет
   void clean() {
     T tmp;
     while(!empty())
@@ -36,6 +37,7 @@ public:
 
   using I = LinkedListIterator<T>;
 
+  // O(1)
   // създаване на празен списък
   LinkedList() : front(nullptr), back(nullptr) {}
 
@@ -50,6 +52,7 @@ public:
     clean();
   }
 
+  // O(1)
   // проверка дали списък е празен
   bool empty() const {
     return front == nullptr;
@@ -70,6 +73,7 @@ public:
     return true;
   }
 
+  // O(1)
   // вмъкване след позиция
   bool insertAfter(T const& x, I it = end()) {    
     if (it == end() && empty()) {
@@ -91,6 +95,7 @@ public:
     return true;
   }
 
+  // O(1) при изключване от началото
   // изключване на елемент на позиция
   bool deleteAt(T& x, I it) {
     // засега позволяваме само изключване от началото на списък
@@ -121,14 +126,19 @@ public:
   // изключване на елемент след позиция
   bool deleteAfter(T&, I);
 
-  // достъп до елемент на позиция
-  T getAt(I) const;
+  // O(1)
+  // достъп до елемент на позиция с възможност за промяна
+  T& getAt(I it) const {
+    return it.get();
+  }
 
+  // O(1)
   // началото на списъка
   I begin() const {
     return I(front);
   }
 
+  // O(1)
   // краят на списъка
   I end() const {
     return I(back);
@@ -139,11 +149,13 @@ public:
     insertBefore(x, begin());
   }
 
+  // O(1)
   // вмъкване в края на списък
   void insertEnd(T const& x) {
     insertAfter(x, end());
   }
 
+  // O(1)
   // изтриване на първия елемент
   bool deleteBegin(T& x) {
     return deleteAt(x, begin());
@@ -159,6 +171,7 @@ public:
     insertEnd(x);
   }
 
+  // O(n)
   void print(std::ostream& os = std::cout) const {
     for(I it = begin(); it; ++it)
       os << *it << ' ';
@@ -166,7 +179,7 @@ public:
   }
 };
 
-
+// всички операции са O(1)
 template <typename T>
 class LinkedListIterator {
 private:

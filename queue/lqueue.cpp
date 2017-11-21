@@ -17,7 +17,8 @@ private:
   QueueElement<T> *front, *back;
 
   T error;
-
+  
+  // O(n) по време, O(1) по памет
   void copy(LQueue const& q) {
     QueueElement<T>* p = q.front;
     while (p != nullptr) {
@@ -26,6 +27,7 @@ private:
     }
   }
 
+  // O(n)
   void clean() {
     while (!empty())
       dequeue();
@@ -33,6 +35,7 @@ private:
 
 
 public:
+  // O(1)
   // конструиране на празна опашка
   LQueue() : front(nullptr), back(nullptr) {}
 
@@ -55,11 +58,13 @@ public:
     clean();
   }
 
+  // O(1)
   // проверка за празнота на опашка
   bool empty() const {
     return back == nullptr;
   }
 
+  // O(1)
   // включване на елемент на края на опашката
   bool enqueue(T const& x) {
     QueueElement<T>* p = new QueueElement<T>(x);
@@ -73,6 +78,7 @@ public:
     return true;
   }
 
+  // O(1)
   // изключване на елемент от началото на опашката
   T dequeue() {
     if (empty()) {
@@ -89,6 +95,7 @@ public:
     return x;
   }
 
+  // O(1)
   // достъп до първия елемент на опашката
   T head() const {
     if (empty()) {
@@ -99,6 +106,7 @@ public:
     return front->data;
   }
 
+  // O(1)
   // достъп до първия елемент на опашката с възможност за промяна
   T& head() {
     if (empty()) {
@@ -109,6 +117,7 @@ public:
     return front->data;
   }
 
+  // O(n) по време и по памет
   void print(std::ostream& os = std::cout) const {
     LQueue<T> copy = *this;
     while (!copy.empty())

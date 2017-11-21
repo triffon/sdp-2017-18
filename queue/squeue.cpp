@@ -9,6 +9,7 @@ private:
   T a[MAX];
   int front, back;
 
+  // O(1)
   // проверка дали опашката е запълнена
   bool full() const {
     return (back + 2) % MAX == front;
@@ -16,14 +17,17 @@ private:
   
 public:
 
+  // O(1)
   // конструктор на празна опашка
   SQueue() : front(0), back(-1) {}
-  
+
+  // O(1)
   // проверка за празнота на опашка
   bool empty() const {
     return (back + 1) % MAX == front;
   }
 
+  // O(1)
   // включване на елемент на края на опашката
   bool enqueue(T const& x) {
     if (full()) {
@@ -35,6 +39,7 @@ public:
     return true;
   }
 
+  // O(1)
   // изключване на елемент от началото на опашката
   T dequeue() {
     if (empty()) {
@@ -47,6 +52,7 @@ public:
     return x;
   }   
 
+  // O(1)
   // достъп до първия елемент на опашката
   T head() const {
     if (empty()) {
@@ -57,6 +63,7 @@ public:
     return a[front];
   }
 
+  // O(1)
   // достъп до първия елемент на опашката с възможност за промяна
   T& head() {
     if (empty()) {

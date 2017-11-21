@@ -66,14 +66,17 @@ public:
 	}
 };
 
+// O(1)
 template <typename T>
 LinkedStack<T>::LinkedStack() : top(nullptr) {}
 
+// O(1)
 template <typename T>
 bool LinkedStack<T>::empty() const {
 	return top == nullptr;
 }
 
+// O(1)
 template <typename T>
 void LinkedStack<T>::push(T const& x) {
 	StackElement<T>* p = new StackElement<T>;
@@ -82,6 +85,7 @@ void LinkedStack<T>::push(T const& x) {
 	top = p;
 }
 
+// O(1)
 template <typename T>
 T LinkedStack<T>::pop() {
 	if (empty()) {
@@ -96,6 +100,7 @@ T LinkedStack<T>::pop() {
 	return x;
 }
 
+// O(1)
 template <typename T>
 T LinkedStack<T>::peek() const {
 	if (empty()) {
@@ -106,12 +111,14 @@ T LinkedStack<T>::peek() const {
 	return top->data;
 }
 
+// O(1)
 template <typename T>
 T& LinkedStack<T>::peek() {
   // TODO: проверка за празен стек!
   return top->data;
 }
 
+// O(n)
 template <typename T>
 void LinkedStack<T>::eraseStack() {
 	// !!! delete top;
@@ -126,6 +133,7 @@ LinkedStack<T>::~LinkedStack() {
 }
 
 /*
+// O(n) по време, O(1) по памет
 LinkedStack<T>::LinkedStack(LinkedStack const& ls) :
 	top(nullptr) {
 
@@ -159,6 +167,7 @@ LinkedStack<T>::LinkedStack(LinkedStack const& ls) :
 
 */
 
+// O(n) и по време и по памет
 template <typename T>
 void LinkedStack<T>::copy(StackElement<T>* toCopy) {
 	if (toCopy == nullptr)
