@@ -183,3 +183,37 @@ TEST_CASE("LinkedList", LinkedList_DestructiveAppendIsCorrect) {
   Assert::IsTrue(l2.empty());
 }
 
+TEST_CASE("LinkedList", LinkedList_DestructiveAppendEmptyList) {
+  LinkedList<int> l1, l2;
+  int i;
+  for(i = 0; i < 10; i++)
+    l1 += i;
+  l1.append(l2);
+  Assert::AreEqual(*l1.begin(), 0);
+  Assert::AreEqual(*l1.end(), 9);
+  i = 0;
+  for(LinkedListIterator<int> it = l1.begin(); it; ++it, ++i)
+    Assert::AreEqual(*it, i);
+  Assert::IsTrue(l2.empty());
+}
+
+TEST_CASE("LinkedList", LinkedList_EmptyListDestructiveAppend) {
+  LinkedList<int> l1, l2;
+  int i;
+  for(i = 0; i < 10; i++)
+    l2 += i;
+  l1.append(l2);
+  Assert::AreEqual(*l1.begin(), 0);
+  Assert::AreEqual(*l1.end(), 9);
+  i = 0;
+  for(LinkedListIterator<int> it = l1.begin(); it; ++it, ++i)
+    Assert::AreEqual(*it, i);
+  Assert::IsTrue(l2.empty());
+}
+
+TEST_CASE("LinkedList", LinkedList_EmptyListDestructiveAppendEmptyList) {
+  LinkedList<int> l1, l2;
+  l1.append(l2);
+  Assert::IsTrue(l1.empty());
+  Assert::IsTrue(l2.empty());  
+}
