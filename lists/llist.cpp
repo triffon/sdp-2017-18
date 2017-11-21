@@ -236,6 +236,18 @@ public:
       back = l.back;
     l.front = l.back = nullptr;
   }
+
+  void reverse() {
+    // TODO: да се реализира обръщане на място
+  }
+
+  // O(n) по време и O(1) по сложност
+  int length() const {
+    int n = 0;
+    for(I it = begin(); it; ++it)
+      ++n;
+    return n;
+  }
 };
 
 // всички операции са O(1)
@@ -321,11 +333,69 @@ public:
   }
 };
 
-// O(n)
+// O(n) по време и O(1) по памет
 template <typename T>
 void append(LinkedList<T>& l1, LinkedList<T> const& l2) {
   for(LinkedListIterator<int> it = l2.begin(); it; ++it)
     l1 += *it;
+}
+
+// O(n) по време и O(1) по памет
+template <typename T>
+void reverse(LinkedList<T>& l) {
+  LinkedListIterator<T> it = l.begin();
+  T x;
+  while(l.deleteAfter(x, it))
+    l.insertBegin(x);
+}
+
+// O(n)
+template <typename T>
+void split(LinkedList<T> const& l, LinkedList<T>& l1, LinkedList<T>& l2) {
+
+  LinkedList<T> *addNow = &l1, *addLater = &l2;
+  for(LinkedListIterator<T> it = l.begin(); it; ++it) {
+    addNow->insertEnd(*it);
+    std::swap(addNow, addLater);
+  }
+}
+
+// O(m + n)
+template <typename T>
+LinkedList<T> merge(LinkedList<T> const& l1, LinkedList<T> const& l2) {
+  LinkedListIterator<T> it1 = l1.begin(), it2 = l2.begin();
+  LinkedList<T> l;
+  while (it1 && it2)
+    if (*it1 < *it2)
+      l += *it1++;
+    else
+      l += *it2++;
+  // !it1 || !it2
+  while (it1)
+    l += *it1++;
+  while (it2)
+    l += *it2++;
+  return l;
+}
+
+// O(n*log(n))
+template <typename T>
+void mergeSort(LinkedList<T>& l) {
+  if (l.begin() == l.end())
+    // дъно: списъкът е от 0 или 1 елемент
+    return;
+  // 1. разделяме списъка на две равни части
+  LinkedList<T> l1, l2;
+  // O(n)
+  split(l, l1, l2);
+  // 2. сортираме рекурсивно всяка от частите
+  // O(f(n/2))
+  mergeSort(l1);
+  // O(f(n/2))
+  mergeSort(l2);
+  // O(n)
+  // 3. сливаме сортираните части
+  l = merge(l1, l2);
 }
 
 #endif

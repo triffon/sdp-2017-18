@@ -1,5 +1,6 @@
 #include "UnitTestFramework.h"
 #include "llist.cpp"
+#include <cmath>
 
 TEST_CASE("LinkedList", CreateEmptyList) {
   const LinkedList<int> l;
@@ -216,4 +217,82 @@ TEST_CASE("LinkedList", LinkedList_EmptyListDestructiveAppendEmptyList) {
   l1.append(l2);
   Assert::IsTrue(l1.empty());
   Assert::IsTrue(l2.empty());  
+}
+
+TEST_CASE("LinkedList", LinkedList_ReverseIsCorrect) {
+  LinkedList<int> l;
+  int i;
+  for(i = 0; i < 10; i++)
+    l += i;
+  reverse(l);
+  i = 9;
+  for(LinkedListIterator<int> it = l.begin(); it; ++it, --i)
+    Assert::AreEqual(*it, i);
+}
+  
+TEST_CASE("LinkedList", LinkedList_ReverseInPlaceIsCorrect) {
+  LinkedList<int> l;
+  int i;
+  for(i = 0; i < 10; i++)
+    l += i;
+  l.reverse();
+  i = 9;
+  for(LinkedListIterator<int> it = l.begin(); it; ++it, --i)
+    Assert::AreEqual(*it, i);
+}
+
+TEST_CASE("LinkedList", LinkedList_LengthIsCorrect) {
+  LinkedList<int> l;
+  Assert::AreEqual(l.length(), 0);
+  for(int i = 0; i < 10; i++)
+    l += i;
+  Assert::AreEqual(l.length(), 10);
+}
+
+
+TEST_CASE("LinkedList", LinkedList_SplitEvenLength) {
+  LinkedList<int> l, l1, l2;
+  for(int i = 0; i < 10; i++)
+    l += i;
+  split(l, l1, l2);
+  Assert::AreEqual(l1.length(), l2.length());
+}
+
+TEST_CASE("LinkedList", LinkedList_SplitOddLength) {
+  LinkedList<int> l, l1, l2;
+  for(int i = 0; i < 9; i++)
+    l += i;
+  split(l, l1, l2);
+  Assert::IsTrue(std::abs(l1.length() - l2.length()) == 1);
+}
+
+TEST_CASE("LinkedList", LinkedList_MergeSorted) {
+  LinkedList<int> l1, l2;
+  for(int i = 0; i < 10; i++) {
+    l1 += 2*i;
+    l2 += 2*i + 1;
+  }
+  LinkedList<int> l = merge(l1, l2);
+  int i = 0;
+  Assert::AreEqual(*l.begin(), 0);
+  Assert::AreEqual(*l.end(), 19);
+  for(LinkedListIterator<int> it = l.begin(); it; ++it, ++i)
+    Assert::AreEqual(*it, i);
+}
+
+TEST_CASE("LinkedList", LinkedList_MergeSortSorts) {
+  LinkedList<int> l;
+  int x = 5;
+  for(int i = 0; i < 11; i++) {
+    l += x;
+    // 5 -> 2 -> 3 -> 10 -> 4 -> ...
+    (x += 7) %= 11;
+  }
+  l.print();
+  mergeSort(l);
+  Assert::AreEqual(*l.begin(), 0);
+  Assert::AreEqual(*l.end(), 10);  
+  int i = 0;
+  for(LinkedListIterator<int> it = l.begin(); it; ++it, ++i)
+    Assert::AreEqual(*it, i);
 }
