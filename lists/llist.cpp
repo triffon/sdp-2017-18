@@ -18,6 +18,10 @@ class LinkedListIterator;
 
 template <typename T>
 class LinkedList {
+public:
+
+  using I = LinkedListIterator<T>;
+
 private:
 
   using LLE = LinkedListElement<T>;
@@ -33,10 +37,16 @@ private:
       deleteBegin(tmp);
   }
 
+  // O(n) по време, O(1) по памет
+  I findPrev(I it) {
+    I pit = begin();
+    while (pit && pit.ptr->next != it.ptr)
+      ++pit;
+    return pit;
+  }
+
 public:
-
-  using I = LinkedListIterator<T>;
-
+  
   // O(1)
   // създаване на празен списък
   LinkedList() : front(nullptr), back(nullptr) {}
@@ -58,24 +68,30 @@ public:
     return front == nullptr;
   }
 
+  // O(n) по време, O(1) по памет
   // вмъкване преди позиция
-  bool insertBefore(T const& x, I it = begin()) {
-    // засега позволяваме само включване в началото
-    if (it != begin())
+  bool insertBefore(T const& x, I it) {
+    if (it == begin()) {
+      LLE* p = new LLE(x, front);
+      if (empty())
+        // ако списъкът е бил празен, тогава трябва back също да сочи към p
+        back = p;
+      front = p;
+      return true;
+    }
+
+    if (!it || empty())
       return false;
 
-    LLE* p = new LLE(x, front);
-    if (empty())
-      // ако списъкът е бил празен, тогава трябва back също да сочи към p
-      back = p;
-    front = p;
-
-    return true;
+    // итераторът е валиден и списъкът е непразен
+    // итераторът не сочи към първия елемент
+    // проверката за невалидност ще се обработи от insertAfter
+    return insertAfter(x, findPrev(it));
   }
 
   // O(1)
   // вмъкване след позиция
-  bool insertAfter(T const& x, I it = end()) {    
+  bool insertAfter(T const& x, I it) {    
     if (it == end() && empty()) {
       // включване на първи елемент в празен списък
       front = back = new LLE(x);
@@ -95,36 +111,55 @@ public:
     return true;
   }
 
-  // O(1) при изключване от началото
   // изключване на елемент на позиция
+  // O(n) по време и O(1) по памет
   bool deleteAt(T& x, I it) {
-    // засега позволяваме само изключване от началото на списък
-    if (it != begin())
-      return false;
-
-    // изключване на елемент от началото на списъка
-
-    // не можем да изключваме от празен списък
-    if (empty())
+    if (empty() || !it)
       return false;
     // списъкът не е празен
-    // front != nullptr
+    // итераторът е валиден
+    
+    if (it == begin()) {
+      // изключване на елемент от началото на списъка
+      // front != nullptr
+      x = front->data;
+      LLE* p = front;
+      front = front->next;
+      if (front == nullptr)
+        back = nullptr;
+      delete p;
+      return true;
+    }
 
-    x = front->data;
-    LLE* p = front;
-    front = front->next;
-    if (front == nullptr)
-      back = nullptr;
-    delete p;
-
-    return true;
+    // итераторът не сочи в началото на списъка
+    return deleteAfter(x, findPrev(it));
   }
 
   // изключване на елемент преди позиция
-  bool deleteBefore(T&, I);
+  // O(n) по време и O(1) по памет
+  bool deleteBefore(T& x, I it) {
+    if (empty() || !it || it == begin())
+      return false;
+    // списъкът е непразен
+    // итераторът е валиден и не сочи към началото
+    return deleteAt(x, findPrev(it));
+  }
 
+  // O(1)
   // изключване на елемент след позиция
-  bool deleteAfter(T&, I);
+  bool deleteAfter(T& x, I it) {
+    if (empty() || !it || it == end())
+      return false;
+    // it не е в края на списъка и е валиден
+    // списъкът е непразен
+    LLE* p = it.ptr->next; // не може да е nullptr
+    it.ptr->next = p->next; // може да е nullptr
+    x = p->data;
+    delete p;
+    if (back == p)
+      back = it.ptr;
+    return true;
+  }
 
   // O(1)
   // достъп до елемент на позиция с възможност за промяна
