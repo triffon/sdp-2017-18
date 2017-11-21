@@ -151,3 +151,35 @@ TEST_CASE("LinkedList", LinkedList_AssignAvoidsSharing) {
   for(LinkedListIterator<int> it = l2.begin(); it; ++it, ++i)
     Assert::AreEqual(*it, i);
 }
+
+TEST_CASE("LinkedList", LinkedList_NonDestructiveAppendIsCorrect) {
+  LinkedList<int> l1, l2;
+  int i;
+  for(i = 0; i < 10; i++)
+    l1 += i;
+  for(; i < 20; i++)
+    l2 += i;
+  append(l1, l2);
+  Assert::AreEqual(*l1.begin(), 0);
+  Assert::AreEqual(*l1.end(), 19);
+  i = 0;
+  for(LinkedListIterator<int> it = l1.begin(); it; ++it, ++i)
+    Assert::AreEqual(*it, i);
+}
+
+TEST_CASE("LinkedList", LinkedList_DestructiveAppendIsCorrect) {
+  LinkedList<int> l1, l2;
+  int i;
+  for(i = 0; i < 10; i++)
+    l1 += i;
+  for(; i < 20; i++)
+    l2 += i;
+  l1.append(l2);
+  Assert::AreEqual(*l1.begin(), 0);
+  Assert::AreEqual(*l1.end(), 19);
+  i = 0;
+  for(LinkedListIterator<int> it = l1.begin(); it; ++it, ++i)
+    Assert::AreEqual(*it, i);
+  Assert::IsTrue(l2.empty());
+}
+

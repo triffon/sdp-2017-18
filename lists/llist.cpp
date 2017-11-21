@@ -28,7 +28,11 @@ private:
   
   LLE *front, *back;
 
-  void copy(LinkedList const&);
+  // O(n) по време, O(1) по памет
+  void copy(LinkedList const& l) {
+    for(I it = l.begin(); it; ++it)
+      insertEnd(*it);
+  }
 
   // O(n) по време, O(1) по памет
   void clean() {
@@ -52,10 +56,18 @@ public:
   LinkedList() : front(nullptr), back(nullptr) {}
 
   // конструктор за копиране
-  LinkedList(LinkedList const&);
+  LinkedList(LinkedList const& l) : front(nullptr), back(nullptr) {
+    copy(l);
+  }
 
   // операция за присвояване
-  LinkedList& operator=(LinkedList const&);
+  LinkedList& operator=(LinkedList const& l) {
+    if (this != &l) {
+      clean();
+      copy(l);
+    }
+    return *this;
+  }
 
   // деструктор
   ~LinkedList() {
@@ -212,6 +224,18 @@ public:
       os << *it << ' ';
     os << std::endl;
   }
+
+  void append(LinkedList& l) {
+    if (back != nullptr)
+      back->next = l.front;
+    else
+      // първият списък е празен, насочваме front в началото
+      front = l.front;
+
+    if (l.back != nullptr)
+      back = l.back;
+    l.front = l.back = nullptr;
+  }
 };
 
 // всички операции са O(1)
@@ -297,5 +321,11 @@ public:
   }
 };
 
+// O(n)
+template <typename T>
+void append(LinkedList<T>& l1, LinkedList<T> const& l2) {
+  for(LinkedListIterator<int> it = l2.begin(); it; ++it)
+    l1 += *it;
+}
 
 #endif
