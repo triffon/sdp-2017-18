@@ -32,19 +32,15 @@ private:
 
   // O(n) по време, O(1) по памет
   void copy(DoubleLinkedList const& l) {
-    /*
     for(I it = l.begin(); it; ++it)
       insertEnd(*it);
-    */
   }
 
   // O(n) по време, O(1) по памет
   void clean() {
-    /*
     T tmp;
     while(!empty())
       deleteBegin(tmp);
-    */
   }
 
 public:
@@ -182,6 +178,7 @@ public:
     // TODO: може ли да обединим двата случая?
   }
 
+  // O(1) по време и по памет
   // изтриване на елемент на дадена позиция
   bool deleteAt(T& x, I it) {
     if (!it)
@@ -224,19 +221,37 @@ public:
     return true;
   }
 
+  // O(1) по време и по памет
   // изтриване на елемент преди дадена позиция
   bool deleteBefore(T& x, I it) {
     if (!it)
       return false;
     return deleteAt(x, it.prev());
   }
-  
+
+  // O(1) по време и по памет
   // изтриване на елемент след дадена позиция
   bool deleteAfter(T& x, I it) {
     if (!it)
       return false;
     return deleteAt(x, it.next());
   }
+
+  void append(DoubleLinkedList& l) {
+    if (back != nullptr)
+      back->next = l.front;
+    else
+      // първият списък е празен, насочваме front в началото
+      front = l.front;
+
+    if (l.back != nullptr) {
+      back = l.back;
+      l.front->prev = back;
+    }
+    l.front = l.back = nullptr;
+  }
+
+
 };
 
 // всички операции са O(1)
@@ -318,175 +333,38 @@ public:
     return *this = next();
   }
 
+  // it-- <-> it = it.prev(), връща старата стойност на it
+  I operator--(int) {
+    I prev = *this;
+    --(*this);
+    return prev;
+  }
+  
+  // --it <-> it = it.prev(), връща новата стойност на it
+  I& operator--() {
+    return *this = prev();
+  }
+ 
   // it <-> it.valid()
   operator bool() const {
     return valid();
   }
 };
 
-#endif
-
-#ifdef BLAH
-  // O(1)
-  // вмъкване след позиция
-  bool insertAfter(T const& x, I it) {    
-    if (it == end() && empty()) {
-      // включване на първи елемент в празен списък
-      front = back = new LLE(x);
-      return true;
-    } else {
-      if (!it)
-        return false;
-      // it е валиден итератор
-
-      // включване след произволна позиция
-      // ако it == end(), тогава it.ptr == back, а it.next().ptr == nullptr
-      LLE* p = new LLE(x, it.next().ptr);
-      it.ptr->next = p;
-      if (it == end())
-        back = p;
-    }
-    return true;
-  }
-
-  // изключване на елемент на позиция
-  // O(n) по време и O(1) по памет
-  bool deleteAt(T& x, I it) {
-    if (empty() || !it)
-      return false;
-    // списъкът не е празен
-    // итераторът е валиден
-    
-    if (it == begin()) {
-      // изключване на елемент от началото на списъка
-      // front != nullptr
-      x = front->data;
-      LLE* p = front;
-      front = front->next;
-      if (front == nullptr)
-        back = nullptr;
-      delete p;
-      return true;
-    }
-
-    // итераторът не сочи в началото на списъка
-    return deleteAfter(x, findPrev(it));
-  }
-
-  // изключване на елемент преди позиция
-  // O(n) по време и O(1) по памет
-  bool deleteBefore(T& x, I it) {
-    if (empty() || !it || it == begin())
-      return false;
-    // списъкът е непразен
-    // итераторът е валиден и не сочи към началото
-    return deleteAt(x, findPrev(it));
-  }
-
-  // O(1)
-  // изключване на елемент след позиция
-  bool deleteAfter(T& x, I it) {
-    if (empty() || !it || it == end())
-      return false;
-    // it не е в края на списъка и е валиден
-    // списъкът е непразен
-    LLE* p = it.ptr->next; // не може да е nullptr
-    it.ptr->next = p->next; // може да е nullptr
-    x = p->data;
-    delete p;
-    if (back == p)
-      back = it.ptr;
-    return true;
-  }
-
-  void append(LinkedList& l) {
-    if (back != nullptr)
-      back->next = l.front;
-    else
-      // първият списък е празен, насочваме front в началото
-      front = l.front;
-
-    if (l.back != nullptr)
-      back = l.back;
-    l.front = l.back = nullptr;
-  }
-
-  void reverse() {
-    // TODO: да се реализира обръщане на място
-  }
-
-  // O(n) по време и O(1) по сложност
-  int length() const {
-    int n = 0;
-    for(I it = begin(); it; ++it)
-      ++n;
-    return n;
-  }
-};
-
 // O(n) по време и O(1) по памет
 template <typename T>
-void append(LinkedList<T>& l1, LinkedList<T> const& l2) {
-  for(LinkedListIterator<int> it = l2.begin(); it; ++it)
+void append(DoubleLinkedList<T>& l1, DoubleLinkedList<T> const& l2) {
+  for(DoubleLinkedListIterator<int> it = l2.begin(); it; ++it)
     l1 += *it;
 }
 
 // O(n) по време и O(1) по памет
 template <typename T>
-void reverse(LinkedList<T>& l) {
-  LinkedListIterator<T> it = l.begin();
-  T x;
-  while(l.deleteAfter(x, it))
-    l.insertBegin(x);
-}
-
-// O(n)
-template <typename T>
-void split(LinkedList<T> const& l, LinkedList<T>& l1, LinkedList<T>& l2) {
-
-  LinkedList<T> *addNow = &l1, *addLater = &l2;
-  for(LinkedListIterator<T> it = l.begin(); it; ++it) {
-    addNow->insertEnd(*it);
-    std::swap(addNow, addLater);
-  }
-}
-
-// O(m + n)
-template <typename T>
-LinkedList<T> merge(LinkedList<T> const& l1, LinkedList<T> const& l2) {
-  LinkedListIterator<T> it1 = l1.begin(), it2 = l2.begin();
-  LinkedList<T> l;
-  while (it1 && it2)
-    if (*it1 < *it2)
-      l += *it1++;
-    else
-      l += *it2++;
-  // !it1 || !it2
-  while (it1)
-    l += *it1++;
-  while (it2)
-    l += *it2++;
-  return l;
-}
-
-// O(n*log(n))
-template <typename T>
-void mergeSort(LinkedList<T>& l) {
-  if (l.begin() == l.end())
-    // дъно: списъкът е от 0 или 1 елемент
-    return;
-  // 1. разделяме списъка на две равни части
-  LinkedList<T> l1, l2;
-  // O(n)
-  split(l, l1, l2);
-  // 2. сортираме рекурсивно всяка от частите
-  // O(f(n/2))
-  mergeSort(l1);
-  // O(f(n/2))
-  mergeSort(l2);
-  // O(n)
-  // 3. сливаме сортираните части
-  l = merge(l1, l2);
+void reverse(DoubleLinkedList<T>& l) {
+  for(DoubleLinkedListIterator<int> nit = l.begin(), pit = l.end();
+      nit != pit && nit && nit.prev() != pit;
+      ++nit, --pit)
+    std::swap(*nit, *pit);
 }
 
 #endif

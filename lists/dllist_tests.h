@@ -38,6 +38,24 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_InsertBeginTraverseList) {
     Assert::AreEqual(*it, i);
 }
 
+TEST_CASE("DoubleLinkedList", DoubleLinkedList_InsertEndTraverseListReverse) {
+  DoubleLinkedList<int> l;
+  for(int i = 0; i < 10; i++)
+    l += i;
+  int i = 9;
+  for(DoubleLinkedListIterator<int> it = l.end(); it; it--, i--)
+    Assert::AreEqual(*it, i);
+}
+
+TEST_CASE("DoubleLinkedList", DoubleLinkedList_InsertBeginTraverseListReverse) {
+  DoubleLinkedList<int> l;
+  for(int i = 0; i < 10; i++)
+    l.insertBegin(i);
+  int i = 0;
+  for(DoubleLinkedListIterator<int> it = l.end(); it; it--, i++)
+    Assert::AreEqual(*it, i);
+}
+
 TEST_CASE("DoubleLinkedList", DoubleLinkedList_InsertAfterIsCorrect) {
   DoubleLinkedList<int> l;
   for(int i = 0; i < 10; i += 2)
@@ -124,8 +142,6 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_DeleteBeforeIsCorrect) {
   for(DoubleLinkedListIterator<int> it = l.begin(); it; ++it, i += 2)
     Assert::AreEqual(*it, i);
 }
-
-#ifdef BLAH
 
 TEST_CASE("DoubleLinkedList", DoubleLinkedList_CopyAvoidsSharing) {
   DoubleLinkedList<int>* l1 = new DoubleLinkedList<int>;
@@ -222,7 +238,7 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_EmptyListDestructiveAppendEmptyLi
   Assert::IsTrue(l2.empty());  
 }
 
-TEST_CASE("DoubleLinkedList", DoubleLinkedList_ReverseIsCorrect) {
+TEST_CASE("DoubleLinkedList", DoubleLinkedList_ReverseEvenIsCorrect) {
   DoubleLinkedList<int> l;
   int i;
   for(i = 0; i < 10; i++)
@@ -232,71 +248,15 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_ReverseIsCorrect) {
   for(DoubleLinkedListIterator<int> it = l.begin(); it; ++it, --i)
     Assert::AreEqual(*it, i);
 }
-  
-TEST_CASE("DoubleLinkedList", DoubleLinkedList_ReverseInPlaceIsCorrect) {
+
+TEST_CASE("DoubleLinkedList", DoubleLinkedList_ReverseOddIsCorrect) {
   DoubleLinkedList<int> l;
   int i;
-  for(i = 0; i < 10; i++)
+  for(i = 0; i < 9; i++)
     l += i;
-  l.reverse();
-  i = 9;
+  reverse(l);
+  i = 8;
   for(DoubleLinkedListIterator<int> it = l.begin(); it; ++it, --i)
-    Assert::AreEqual(*it, i);
-}
-
-TEST_CASE("DoubleLinkedList", DoubleLinkedList_LengthIsCorrect) {
-  DoubleLinkedList<int> l;
-  Assert::AreEqual(l.length(), 0);
-  for(int i = 0; i < 10; i++)
-    l += i;
-  Assert::AreEqual(l.length(), 10);
-}
-
-
-TEST_CASE("DoubleLinkedList", DoubleLinkedList_SplitEvenLength) {
-  DoubleLinkedList<int> l, l1, l2;
-  for(int i = 0; i < 10; i++)
-    l += i;
-  split(l, l1, l2);
-  Assert::AreEqual(l1.length(), l2.length());
-}
-
-TEST_CASE("DoubleLinkedList", DoubleLinkedList_SplitOddLength) {
-  DoubleLinkedList<int> l, l1, l2;
-  for(int i = 0; i < 9; i++)
-    l += i;
-  split(l, l1, l2);
-  Assert::IsTrue(std::abs(l1.length() - l2.length()) == 1);
-}
-
-TEST_CASE("DoubleLinkedList", DoubleLinkedList_MergeSorted) {
-  DoubleLinkedList<int> l1, l2;
-  for(int i = 0; i < 10; i++) {
-    l1 += 2*i;
-    l2 += 2*i + 1;
-  }
-  DoubleLinkedList<int> l = merge(l1, l2);
-  int i = 0;
-  Assert::AreEqual(*l.begin(), 0);
-  Assert::AreEqual(*l.end(), 19);
-  for(DoubleLinkedListIterator<int> it = l.begin(); it; ++it, ++i)
-    Assert::AreEqual(*it, i);
-}
-
-TEST_CASE("DoubleLinkedList", DoubleLinkedList_MergeSortSorts) {
-  DoubleLinkedList<int> l;
-  int x = 5;
-  for(int i = 0; i < 11; i++) {
-    l += x;
-    // 5 -> 2 -> 3 -> 10 -> 4 -> ...
-    (x += 7) %= 11;
-  }
-  // l.print();
-  mergeSort(l);
-  Assert::AreEqual(*l.begin(), 0);
-  Assert::AreEqual(*l.end(), 10);  
-  int i = 0;
-  for(DoubleLinkedListIterator<int> it = l.begin(); it; ++it, ++i)
     Assert::AreEqual(*it, i);
 }
 
@@ -408,4 +368,4 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_SumOddSquares) {
 }
 
 // TODO: SumOddSquaresD
-#endif
+
