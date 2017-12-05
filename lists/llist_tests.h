@@ -3,24 +3,24 @@
 #include "list_highorder.cpp"
 #include <cmath>
 
-TEST_CASE("LinkedList", CreateEmptyList) {
+TEST_CASE("LinkedList", LinkedList_CreateEmptyList) {
   const LinkedList<int> l;
   Assert::IsTrue(l.empty());
 }
 
-TEST_CASE("LinkedList", InsertBeginNotEmptyList) {
+TEST_CASE("LinkedList", LinkedList_InsertBeginNotEmptyList) {
   LinkedList<int> l;
   l.insertBegin(10);
   Assert::IsFalse(l.empty());
 }
 
-TEST_CASE("LinkedList", InsertEndNotEmptyList) {
+TEST_CASE("LinkedList", LinkedList_InsertEndNotEmptyList) {
   LinkedList<int> l;
   l.insertEnd(10);
   Assert::IsFalse(l.empty());
 }
 
-TEST_CASE("LinkedList", InsertEndTraverseList) {
+TEST_CASE("LinkedList", LinkedList_InsertEndTraverseList) {
   LinkedList<int> l;
   for(int i = 0; i < 10; i++)
     l += i;
@@ -29,7 +29,7 @@ TEST_CASE("LinkedList", InsertEndTraverseList) {
     Assert::AreEqual(*it, i);
 }
 
-TEST_CASE("LinkedList", InsertBeginTraverseList) {
+TEST_CASE("LinkedList", LinkedList_InsertBeginTraverseList) {
   LinkedList<int> l;
   for(int i = 0; i < 10; i++)
     l.insertBegin(i);
@@ -38,7 +38,7 @@ TEST_CASE("LinkedList", InsertBeginTraverseList) {
     Assert::AreEqual(*it, i);
 }
 
-TEST_CASE("LinkedList", InsertAfterIsCorrect) {
+TEST_CASE("LinkedList", LinkedList_InsertAfterIsCorrect) {
   LinkedList<int> l;
   for(int i = 0; i < 10; i += 2)
     l.insertEnd(i);
@@ -52,7 +52,7 @@ TEST_CASE("LinkedList", InsertAfterIsCorrect) {
     Assert::AreEqual(*it, i);
 }
 
-TEST_CASE("LinkedList", InsertBeforeIsCorrect) {
+TEST_CASE("LinkedList", LinkedList_InsertBeforeIsCorrect) {
   LinkedList<int> l;
   // добавяме всички четни числа
   for(int i = 2; i < 10; i += 2)
@@ -67,7 +67,7 @@ TEST_CASE("LinkedList", InsertBeforeIsCorrect) {
     Assert::AreEqual(*it, i);
 }
 
-TEST_CASE("LinkedList", DeleteAfterIsCorrect) {
+TEST_CASE("LinkedList", LinkedList_DeleteAfterIsCorrect) {
   LinkedList<int> l;
   for(int i = 0; i < 10; i++)
     l += i;
@@ -85,7 +85,7 @@ TEST_CASE("LinkedList", DeleteAfterIsCorrect) {
     Assert::AreEqual(*it, i);
 }
 
-TEST_CASE("LinkedList", DeleteAtIsCorrect) {
+TEST_CASE("LinkedList", LinkedList_DeleteAtIsCorrect) {
   LinkedList<int> l;
   for(int i = 0; i < 10; i++)
     l += i;
@@ -107,7 +107,7 @@ TEST_CASE("LinkedList", DeleteAtIsCorrect) {
   }
 }
 
-TEST_CASE("LinkedList", DeleteBeforeIsCorrect) {
+TEST_CASE("LinkedList", LinkedList_DeleteBeforeIsCorrect) {
   LinkedList<int> l;
   for(int i = 0; i < 10; i++)
     l += i;
