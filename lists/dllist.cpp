@@ -182,7 +182,61 @@ public:
     // TODO: може ли да обединим двата случая?
   }
 
+  // изтриване на елемент на дадена позиция
+  bool deleteAt(T& x, I it) {
+    if (!it)
+      return false;
+
+    // итераторът е валиден
+    // запомняме данната в x
+    x = *it;
+
+    if (it == begin()) {
+      // частен случай: изтриваме в началото на списъка
+      // прескачаме изтрития елемент
+      front = front->next;
+      delete it.ptr;
+      if (front == nullptr)
+        // списъкът остава празен, back също трябва да е nullptr
+        back = nullptr;
+      else
+        // front е валиден, значи prev трябва да е nullptr
+        front->prev = nullptr;
+    } else
+      if (it == end()) {
+        // частен случай: изтриваме в края на списъка
+        // прескачаме изтрития елемент
+        back = back->prev;
+        delete it.ptr;
+        if (back == nullptr)
+          // списъкът остава празен, front също трябва да е nullptr
+          front = nullptr;
+        else
+          // back е валиден, значи next трябва да е nullptr
+          back->next = nullptr;
+      } else {
+        // изтриваме вътре в списъка
+        // няма да правим промени по front и back
+        it.ptr->prev->next = it.ptr->next;
+        it.ptr->next->prev = it.ptr->prev;
+        delete it.ptr;
+      }
+    return true;
+  }
+
+  // изтриване на елемент преди дадена позиция
+  bool deleteBefore(T& x, I it) {
+    if (!it)
+      return false;
+    return deleteAt(x, it.prev());
+  }
   
+  // изтриване на елемент след дадена позиция
+  bool deleteAfter(T& x, I it) {
+    if (!it)
+      return false;
+    return deleteAt(x, it.next());
+  }
 };
 
 // всички операции са O(1)
@@ -216,7 +270,9 @@ public:
   }
 
   // предишна позиция
-  I prev() const;
+  I prev() const {
+    return I(ptr->prev);
+  }
 
   // достъп до елемент с право на промяна
   T& get() const {
@@ -267,7 +323,6 @@ public:
     return valid();
   }
 };
-
 
 #endif
 
