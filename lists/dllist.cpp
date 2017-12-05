@@ -78,12 +78,59 @@ public:
     return front == nullptr;
   }
 
-};
+  // O(1)
+  // достъп до елемент на позиция с възможност за промяна
+  T& getAt(I it) const {
+    return it.get();
+  }
 
-#endif
+  // O(1)
+  // началото на списъка
+  I begin() const {
+    return I(front);
+  }
 
-#ifdef BLAH
-  // O(n) по време, O(1) по памет
+  // O(1)
+  // краят на списъка
+  I end() const {
+    return I(back);
+  }
+
+  // вмъкване в началото на списък
+  void insertBegin(T const& x) {
+    insertBefore(x, begin());
+  }
+
+  // O(1)
+  // вмъкване в края на списък
+  void insertEnd(T const& x) {
+    insertAfter(x, end());
+  }
+
+  // O(1)
+  // изтриване на първия елемент
+  bool deleteBegin(T& x) {
+    return deleteAt(x, begin());
+  }
+
+  // изтриване на последния елемент
+  bool deleteEnd(T& x) {
+    return deleteAt(x, end());
+  }
+
+  // синтактична захар
+  DoubleLinkedList& operator+=(T const& x) {
+    insertEnd(x);
+  }
+
+  // O(n)
+  void print(std::ostream& os = std::cout) const {
+    for(I it = begin(); it; ++it)
+      os << *it << ' ';
+    os << std::endl;
+  }
+
+  // O(1) по време и памет
   // вмъкване преди позиция
   bool insertBefore(T const& x, I it) {
     if (it == begin()) {
@@ -91,6 +138,9 @@ public:
       if (empty())
         // ако списъкът е бил празен, тогава трябва back също да сочи към p
         back = p;
+      else
+        // а ако не е празен, трябва front->prev да сочи към новата кутия
+        front->prev = p;
       front = p;
       return true;
     }
@@ -100,10 +150,128 @@ public:
 
     // итераторът е валиден и списъкът е непразен
     // итераторът не сочи към първия елемент
-    // проверката за невалидност ще се обработи от insertAfter
-    return insertAfter(x, findPrev(it));
+    LLE* p = new LLE(x, it.ptr, it.ptr->prev);
+    it.ptr->prev = it.ptr->prev->next = p;
+    return true;
+    // TODO: може ли да обединим двата случая?
   }
 
+  // O(1) по време и памет
+  // вмъкване след позиция
+  bool insertAfter(T const& x, I it) {
+    if (it == end()) {
+      LLE* p = new LLE(x, nullptr, back);
+      if (empty())
+        // ако списъкът е бил празен, тогава трябва front също да сочи към p
+        front = p;
+      else
+        // а ако не е празен, трябва back->next да сочи към новата кутия
+        back->next = p;
+      back = p;
+      return true;
+    }
+
+    if (!it || empty())
+      return false;
+
+    // итераторът е валиден и списъкът е непразен
+    // итераторът не сочи към последния елемент
+    LLE* p = new LLE(x, it.ptr->next, it.ptr);
+    it.ptr->next = it.ptr->next->prev = p;
+    return true;
+    // TODO: може ли да обединим двата случая?
+  }
+
+  
+};
+
+// всички операции са O(1)
+template <typename T>
+class DoubleLinkedListIterator {
+private:
+
+  using LLE = DoubleLinkedListElement<T>;
+  
+  LLE* ptr;
+
+  //  static T error;
+
+public:
+
+  using I = DoubleLinkedListIterator<T>;
+  friend class DoubleLinkedList<T>;
+
+  // конструктор по указател
+  DoubleLinkedListIterator(LLE* _ptr = nullptr) : ptr(_ptr) {}
+
+  // няма нужда от голяма четворка!
+
+  // следваща позиция
+  I next() const {
+    // считаме, че итераторът е валиден
+    // if (!valid())
+    //  return *this;
+    
+    return I(ptr->next);
+  }
+
+  // предишна позиция
+  I prev() const;
+
+  // достъп до елемент с право на промяна
+  T& get() const {
+    // допускаме, че итераторът е валиден
+    // if (!valid())
+    //  return error;
+    return ptr->data;
+  }
+
+  // достъп до елемент без право на промяна
+  T const& getConst() const;
+
+  // проверка за валидност
+  bool valid() const {
+    return ptr != nullptr;
+  }
+
+  // сравнение на два итератора
+  bool operator==(I const& it) const {
+    return ptr == it.ptr;
+  }
+
+  bool operator!=(I const& it) const {
+    return !(*this == it);
+  }
+
+  // синтактична захар
+
+  // *it <-> it.get()
+  T& operator*() const {
+    return get();
+  }
+
+  // it++ <-> it = it.next(), връща старата стойност на it
+  I operator++(int) {
+    I prev = *this;
+    ++(*this);
+    return prev;
+  }
+  
+  // ++it <-> it = it.next(), връща новата стойност на it
+  I& operator++() {
+    return *this = next();
+  }
+
+  // it <-> it.valid()
+  operator bool() const {
+    return valid();
+  }
+};
+
+
+#endif
+
+#ifdef BLAH
   // O(1)
   // вмъкване след позиция
   bool insertAfter(T const& x, I it) {    
@@ -176,58 +344,6 @@ public:
     return true;
   }
 
-  // O(1)
-  // достъп до елемент на позиция с възможност за промяна
-  T& getAt(I it) const {
-    return it.get();
-  }
-
-  // O(1)
-  // началото на списъка
-  I begin() const {
-    return I(front);
-  }
-
-  // O(1)
-  // краят на списъка
-  I end() const {
-    return I(back);
-  }
-
-  // вмъкване в началото на списък
-  void insertBegin(T const& x) {
-    insertBefore(x, begin());
-  }
-
-  // O(1)
-  // вмъкване в края на списък
-  void insertEnd(T const& x) {
-    insertAfter(x, end());
-  }
-
-  // O(1)
-  // изтриване на първия елемент
-  bool deleteBegin(T& x) {
-    return deleteAt(x, begin());
-  }
-
-  // изтриване на последния елемент
-  bool deleteEnd(T& x) {
-    return deleteAt(x, end());
-  }
-
-  // синтактична захар
-  LinkedList& operator+=(T const& x) {
-    insertEnd(x);
-  }
-
-  // O(n)
-  void print(std::ostream& os = std::cout) const {
-    for(I it = begin(); it; ++it)
-      os << *it << ' ';
-    os << std::endl;
-  }
-
   void append(LinkedList& l) {
     if (back != nullptr)
       back->next = l.front;
@@ -250,89 +366,6 @@ public:
     for(I it = begin(); it; ++it)
       ++n;
     return n;
-  }
-};
-
-// всички операции са O(1)
-template <typename T>
-class LinkedListIterator {
-private:
-
-  using LLE = LinkedListElement<T>;
-  
-  LLE* ptr;
-
-  //  static T error;
-
-public:
-
-  using I = LinkedListIterator<T>;
-  friend class LinkedList<T>;
-
-  // конструктор по указател
-  LinkedListIterator(LLE* _ptr = nullptr) : ptr(_ptr) {}
-
-  // няма нужда от голяма четворка!
-
-  // следваща позиция
-  I next() const {
-    // считаме, че итераторът е валиден
-    // if (!valid())
-    //  return *this;
-    
-    return I(ptr->next);
-  }
-
-  // предишна позиция
-  I prev() const;
-
-  // достъп до елемент с право на промяна
-  T& get() const {
-    // допускаме, че итераторът е валиден
-    // if (!valid())
-    //  return error;
-    return ptr->data;
-  }
-
-  // достъп до елемент без право на промяна
-  T const& getConst() const;
-
-  // проверка за валидност
-  bool valid() const {
-    return ptr != nullptr;
-  }
-
-  // сравнение на два итератора
-  bool operator==(I const& it) const {
-    return ptr == it.ptr;
-  }
-
-  bool operator!=(I const& it) const {
-    return !(*this == it);
-  }
-
-  // синтактична захар
-
-  // *it <-> it.get()
-  T& operator*() const {
-    return get();
-  }
-
-  // it++ <-> it = it.next(), връща старата стойност на it
-  I operator++(int) {
-    I prev = *this;
-    ++(*this);
-    return prev;
-  }
-  
-  // ++it <-> it = it.next(), връща новата стойност на it
-  I& operator++() {
-    return *this = next();
-  }
-
-  // it <-> it.valid()
-  operator bool() const {
-    return valid();
   }
 };
 
