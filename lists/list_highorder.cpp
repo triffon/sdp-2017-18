@@ -1,3 +1,6 @@
+#ifndef __LIST_HIGHORDER_CPP
+#define __LIST_HIGHORDER_CPP
+
 template <typename T>
 using UnaryPredicate = bool (*)(T);
 
@@ -72,3 +75,5 @@ void filterd(L& l, UnaryPredicate<T> p) {
 }
 
 // TODO: за домашно, filterd O(n) по време
+
+#endif
