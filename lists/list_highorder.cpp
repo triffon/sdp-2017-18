@@ -8,6 +8,7 @@ using UnaryOperation = T (*)(T);
 template <typename T>
 using BinaryOperation = T (*)(T,T);
 
+// O(n) по време и по памет
 template <typename I, typename T>
 T foldr(I it, BinaryOperation<T> op, T nv) {
   /*
@@ -20,10 +21,10 @@ T foldr(I it, BinaryOperation<T> op, T nv) {
   */
     if (!it)
       return nv;
-  I sit = it++;
-  return op(*sit, foldr(it, op, nv));
+  return op(*it, foldr(it.next(), op, nv));
 }
 
+// O(n) по време, O(1) по памет
 template <typename I, typename T>
 T foldl(I it, BinaryOperation<T> op, T nv) {
   T result = nv;
@@ -32,6 +33,7 @@ T foldl(I it, BinaryOperation<T> op, T nv) {
   return result;
 }
 
+// O(n) по време и памет
 template <typename L, typename T>
 L map(L const& l, UnaryOperation<T> f) {
   L result;
@@ -40,12 +42,14 @@ L map(L const& l, UnaryOperation<T> f) {
   return result;
 }
 
+// O(n) по време и O(1) памет
 template <typename L, typename T>
 void mapd(L& l, UnaryOperation<T> f) {
   for(typename L::I it = l.begin(); it; ++it)
     *it = f(*it);
 }
 
+// O(n) по време и памет
 template <typename L, typename T>
 L filter(L const& l, UnaryPredicate<T> p) {
   L result;
@@ -55,10 +59,16 @@ L filter(L const& l, UnaryPredicate<T> p) {
   return result;
 }
 
-
+// O(n^2) по време и O(1) памет
 template <typename L, typename T>
 void filterd(L& l, UnaryPredicate<T> p) {
-  for(typename L::I it = l.begin(); it; ++it)
-    if (p(*it))
-      (*it);
+  for(typename L::I it = l.begin(); it;)
+    if (!p(*it)) {
+      T tmp;
+      l.deleteAt(tmp, it++);
+    }
+    else
+      ++it;
 }
+
+// TODO: за домашно, filterd O(n) по време

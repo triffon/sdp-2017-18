@@ -376,3 +376,33 @@ TEST_CASE("LinkedList", LinkedList_OddsWithFilter) {
   for(LinkedListIterator<int> it = l2.begin(); it; ++it, i += 2)
     Assert::AreEqual(i, *it);
 }
+
+
+TEST_CASE("LinkedList", LinkedList_OddsWithFilterD) {
+  LinkedList<int> l;
+  for(int i = 0; i < 10; i++)
+    l.insertEnd(i);
+  filterd(l, isodd);
+  int i = 1;
+  for(LinkedListIterator<int> it = l.begin(); it; ++it, i += 2)
+    Assert::AreEqual(i, *it);
+}
+
+
+// T* operator+(T* x) { return x; }
+
+TEST_CASE("LinkedList", LinkedList_SumOddSquares) {
+  LinkedList<int> l;
+  for(int i = 1; i <= 5; i++)
+    l.insertEnd(i);
+  Assert::AreEqual(
+                   foldl(
+                         filter(
+                                map(l, +[](int x) { return x * x; }),
+                                +[](int x) { return x % 2 != 0; })
+                         .begin(),
+                         +[](int x, int y) { return x + y; }, 0),
+                   35);
+}
+
+// TODO: SumOddSquaresD
