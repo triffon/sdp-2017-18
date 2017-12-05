@@ -369,3 +369,4 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_SumOddSquares) {
 
 // TODO: SumOddSquaresD
 
+// TODO: подходящи тестове за isPalindrome

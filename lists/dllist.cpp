@@ -367,4 +367,17 @@ void reverse(DoubleLinkedList<T>& l) {
     std::swap(*nit, *pit);
 }
 
+template <typename T>
+bool isPalindrome(DoubleLinkedList<T>& l) {
+  DoubleLinkedListIterator<int> nit = l.begin(), pit = l.end();
+  while (nit && nit != pit && nit.prev() != pit && *nit == *pit) {
+    ++nit;
+    --pit;
+  }
+  // лошият случай: *nit != *pit
+  // добрият случай: !nit || nit == pit || nit.prev() == pit
+  return !nit || *nit == *pit;
+}
+
+
 #endif
