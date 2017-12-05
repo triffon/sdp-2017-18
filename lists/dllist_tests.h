@@ -260,7 +260,7 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_ReverseOddIsCorrect) {
     Assert::AreEqual(*it, i);
 }
 
-int myplus(int x, int y) {
+int myplus_dll(int x, int y) {
   return x + y;
 }
 
@@ -268,10 +268,10 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_SumWithFoldr) {
   DoubleLinkedList<int> l;
   for(int i = 0; i < 10; i++)
     l.insertEnd(i);
-  Assert::AreEqual(foldr(l.begin(), myplus, 0), 45);
+  Assert::AreEqual(foldr(l.begin(), myplus_dll, 0), 45);
 }
 
-std::string myappend(std::string s1, std::string s2) {
+std::string myappend_dll(std::string s1, std::string s2) {
   return s1 + " " + s2;
 }
 
@@ -282,7 +282,7 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_AppendWithFoldr) {
   DoubleLinkedList<std::string> l;
   for(int i = 0; i < 10; i++)
     l.insertEnd(std::to_string(i));
-  Assert::AreEqual(foldr(l.begin(), myappend, std::to_string(10)), "0 1 2 3 4 5 6 7 8 9 10");
+  Assert::AreEqual(foldr(l.begin(), myappend_dll, std::to_string(10)), "0 1 2 3 4 5 6 7 8 9 10");
 }
 
 
@@ -290,17 +290,17 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_SumWithFoldl) {
   DoubleLinkedList<int> l;
   for(int i = 0; i < 10; i++)
     l.insertEnd(i);
-  Assert::AreEqual(foldl(l.begin(), myplus, 0), 45);
+  Assert::AreEqual(foldl(l.begin(), myplus_dll, 0), 45);
 }
 
 TEST_CASE("DoubleLinkedList", DoubleLinkedList_AppendWithFoldl) {
   DoubleLinkedList<std::string> l;
   for(int i = 0; i < 10; i++)
     l.insertEnd(std::to_string(i));
-  Assert::AreEqual(foldl(l.begin(), myappend, std::to_string(10)), "10 0 1 2 3 4 5 6 7 8 9");
+  Assert::AreEqual(foldl(l.begin(), myappend_dll, std::to_string(10)), "10 0 1 2 3 4 5 6 7 8 9");
 }
 
-int square(int x) {
+int square_dll(int x) {
   return x * x;
 }
 
@@ -308,7 +308,7 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_SquareWithMap) {
   DoubleLinkedList<int> l;
   for(int i = 0; i < 10; i++)
     l.insertEnd(i);
-  DoubleLinkedList<int> l2 = map(l, square);
+  DoubleLinkedList<int> l2 = map(l, square_dll);
   int i = 0;
   for(DoubleLinkedListIterator<int> it = l2.begin(); it; ++it, ++i)
     Assert::AreEqual(i*i, *it);
@@ -325,7 +325,7 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_SquareWithMapD) {
     Assert::AreEqual(i*i, *it);
 }
 
-bool isodd(int x) {
+bool isodd_dll(int x) {
   return x % 2 != 0;
 }
 
@@ -333,7 +333,7 @@ TEST_CASE("DoubleLinkedList", DoubleLinkedList_OddsWithFilter) {
   DoubleLinkedList<int> l;
   for(int i = 0; i < 10; i++)
     l.insertEnd(i);
-  DoubleLinkedList<int> l2 = filter(l, isodd);
+  DoubleLinkedList<int> l2 = filter(l, isodd_dll);
   int i = 1;
   for(DoubleLinkedListIterator<int> it = l2.begin(); it; ++it, i += 2)
     Assert::AreEqual(i, *it);
