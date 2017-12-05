@@ -1,5 +1,6 @@
 #include "UnitTestFramework.h"
 #include "llist.cpp"
+#include "list_highorder.cpp"
 #include <cmath>
 
 TEST_CASE("LinkedList", CreateEmptyList) {
@@ -288,11 +289,90 @@ TEST_CASE("LinkedList", LinkedList_MergeSortSorts) {
     // 5 -> 2 -> 3 -> 10 -> 4 -> ...
     (x += 7) %= 11;
   }
-  l.print();
+  // l.print();
   mergeSort(l);
   Assert::AreEqual(*l.begin(), 0);
   Assert::AreEqual(*l.end(), 10);  
   int i = 0;
   for(LinkedListIterator<int> it = l.begin(); it; ++it, ++i)
     Assert::AreEqual(*it, i);
+}
+
+int myplus(int x, int y) {
+  return x + y;
+}
+
+TEST_CASE("LinkedList", LinkedList_SumWithFoldr) {
+  LinkedList<int> l;
+  for(int i = 0; i < 10; i++)
+    l.insertEnd(i);
+  Assert::AreEqual(foldr(l.begin(), myplus, 0), 45);
+}
+
+std::string myappend(std::string s1, std::string s2) {
+  return s1 + " " + s2;
+}
+
+// myappend(s1, myappend(s2, s3))
+// myappend(myappend(s1, s2), s3)
+
+TEST_CASE("LinkedList", LinkedList_AppendWithFoldr) {
+  LinkedList<std::string> l;
+  for(int i = 0; i < 10; i++)
+    l.insertEnd(std::to_string(i));
+  Assert::AreEqual(foldr(l.begin(), myappend, std::to_string(10)), "0 1 2 3 4 5 6 7 8 9 10");
+}
+
+
+TEST_CASE("LinkedList", LinkedList_SumWithFoldl) {
+  LinkedList<int> l;
+  for(int i = 0; i < 10; i++)
+    l.insertEnd(i);
+  Assert::AreEqual(foldl(l.begin(), myplus, 0), 45);
+}
+
+TEST_CASE("LinkedList", LinkedList_AppendWithFoldl) {
+  LinkedList<std::string> l;
+  for(int i = 0; i < 10; i++)
+    l.insertEnd(std::to_string(i));
+  Assert::AreEqual(foldl(l.begin(), myappend, std::to_string(10)), "10 0 1 2 3 4 5 6 7 8 9");
+}
+
+int square(int x) {
+  return x * x;
+}
+
+TEST_CASE("LinkedList", LinkedList_SquareWithMap) {
+  LinkedList<int> l;
+  for(int i = 0; i < 10; i++)
+    l.insertEnd(i);
+  LinkedList<int> l2 = map(l, square);
+  int i = 0;
+  for(LinkedListIterator<int> it = l2.begin(); it; ++it, ++i)
+    Assert::AreEqual(i*i, *it);
+}
+
+
+TEST_CASE("LinkedList", LinkedList_SquareWithMapD) {
+  LinkedList<int> l;
+  for(int i = 0; i < 10; i++)
+    l.insertEnd(i);
+  mapd(l, square);
+  int i = 0;
+  for(LinkedListIterator<int> it = l.begin(); it; ++it, ++i)
+    Assert::AreEqual(i*i, *it);
+}
+
+bool isodd(int x) {
+  return x % 2 != 0;
+}
+
+TEST_CASE("LinkedList", LinkedList_OddsWithFilter) {
+  LinkedList<int> l;
+  for(int i = 0; i < 10; i++)
+    l.insertEnd(i);
+  LinkedList<int> l2 = filter(l, isodd);
+  int i = 1;
+  for(LinkedListIterator<int> it = l2.begin(); it; ++it, i += 2)
+    Assert::AreEqual(i, *it);
 }
