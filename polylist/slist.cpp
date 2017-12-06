@@ -1,6 +1,8 @@
 // TODO: реализирайте четене на SList от поток
 // TODO: реализирайте шаблон SPrimitive<T>, който обвива произволен стандартен тип
 // Примери: SPrimitive<int>, SPrimitive<double>, SPrimitive<char>, SPrimitive<std::string>
+// TODO: направете конструктор за копиране и operator= за SList така че да не се споделя памет
+// Упътване: Cloneable
 
 #ifndef __SLIST_CPP
 #define __SLIST_CPP
