@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.7)
+project(polylist)
+file(GLOB SOURCES "polylist.cpp")
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_STANDARD 11)
+include_directories(../lists ../stack ../queue ../unit-test-framework)
+add_executable(polylist ${SOURCES})
