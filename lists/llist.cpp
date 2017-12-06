@@ -36,9 +36,10 @@ private:
 
   // O(n) по време, O(1) по памет
   void clean() {
-    T tmp;
-    while(!empty())
+    while(!empty()) {
+      T tmp;
       deleteBegin(tmp);
+    }
   }
 
   // O(n) по време, O(1) по памет
