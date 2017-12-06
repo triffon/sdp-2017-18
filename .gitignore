@@ -5,3 +5,5 @@ CMakeFiles/
 Makefile
 CMakeCache.txt
 *.cmake
+*.dot
+*.png
