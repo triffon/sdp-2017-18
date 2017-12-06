@@ -39,7 +39,30 @@ public:
     print(os);
     os << "}";
   }
-  
+
+  // разстояние на x от корена
+  // връща -1, ако x не се среща в дървото
+  int distance(T const& x) const {
+    if (x == root())
+      return 0;
+    for(I it = subtrees(); it; ++it) {
+      int d = (*it).distance(x);
+      if (d >= 0)
+        return d + 1;
+    }
+    return -1;
+  }
+
+  // разклоненост на дървото
+  int breadth() const {
+    int max = children.length();
+    for(I it = subtrees(); it; ++it) {
+      int b = (*it).breadth();
+      if (b > max)
+        max = b;
+    }
+    return max;
+  }
 };
 
 template <typename T>

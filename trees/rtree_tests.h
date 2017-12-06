@@ -18,18 +18,20 @@ ITree createTestTree() {
     .addChild(ITree(10));             
 }
 
-#ifdef BLAH
 TEST_CASE("RTree", RTree_DistanceTest) {
   ITree t = createTestTree();
-  Assert::AreEqual(t.disance(1), 0);
-  Assert::AreEqual(t.disance(2), 1);
-  Assert::AreEqual(t.disance(3), 2);
-  Assert::AreEqual(t.disance(4), 2);
-  Assert::AreEqual(t.disance(5), 3);
-  Assert::AreEqual(t.disance(6), 3);
-  Assert::AreEqual(t.disance(7), 2);
-  Assert::AreEqual(t.disance(8), 2);
-  Assert::AreEqual(t.disance(9), 1);
-  Assert::AreEqual(t.disance(10), 1);
+  Assert::AreEqual(t.distance(1), 0);
+  Assert::AreEqual(t.distance(2), 1);
+  Assert::AreEqual(t.distance(3), 2);
+  Assert::AreEqual(t.distance(4), 2);
+  Assert::AreEqual(t.distance(5), 3);
+  Assert::AreEqual(t.distance(6), 3);
+  Assert::AreEqual(t.distance(7), 2);
+  Assert::AreEqual(t.distance(8), 2);
+  Assert::AreEqual(t.distance(9), 1);
+  Assert::AreEqual(t.distance(10), 1);
 }
-#endif
+
+TEST_CASE("RTree", RTree_BreadthTest) {
+  Assert::AreEqual(createTestTree().breadth(), 4);
+}
