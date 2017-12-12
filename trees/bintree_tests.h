@@ -2,6 +2,7 @@
 #include "bintree.cpp"
 
 using BITree = BinTree<int>;
+using BIPos = BinTreePosition<int>;
 
 BITree createTestBinTree() {
   BITree t(1,
@@ -55,3 +56,21 @@ TEST_CASE("BinTree", BinTree_CountNodeNewDelete) {
   delete t;
 }
 
+TEST_CASE("BinTree", BinTree_TestPosition) {
+  BITree t = createTestBinTree();
+  BIPos p = t;
+  /*
+  Assert::AreEqual(*p, 1);
+  Assert::AreEqual(*p.left(), 2);
+  Assert::AreEqual(*p.right(), 5);
+  Assert::AreEqual(*p.left().left(), 3);
+  Assert::AreEqual(*p.left().right(), 4);
+  Assert::AreEqual(*p.right().left(), 6);
+  */
+  Assert::AreEqual(*p, 1);
+  Assert::AreEqual(*-p, 2);
+  Assert::AreEqual(*+p, 5);
+  Assert::AreEqual(*-(-p), 3);
+  Assert::AreEqual(*+(-p), 4);
+  Assert::AreEqual(*-(+p), 6);
+}

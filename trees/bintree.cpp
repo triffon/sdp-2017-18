@@ -14,8 +14,84 @@ struct BinTreeNode {
 };
 
 template <typename T>
+class BinTree;
+
+template <typename T>
+class BinTreePosition {
+private:
+  using BTN = BinTreeNode<T>;
+
+  BTN* ptr;
+
+  BinTreePosition(BTN* _ptr) : ptr(_ptr) {}
+public:
+
+  BinTreePosition() : ptr(nullptr) {}
+  
+  BinTreePosition(BinTree<T>& bt) : ptr(bt.rootptr) {}
+
+  bool valid() const {
+    return ptr != nullptr;
+  }
+
+  T& get() const {
+    return ptr->data;
+  }
+
+  BinTreePosition left() const {
+    return BinTreePosition(ptr->left);
+  }
+
+  BinTreePosition right() const {
+    return BinTreePosition(ptr->right);
+  }
+
+  // синтактична захар
+
+  operator bool() const {
+    return valid();
+  }
+
+  T& operator*() const {
+    return get();
+  }
+
+  BinTreePosition operator-() const {
+    return left();
+  }
+
+  BinTreePosition operator+() const {
+    return right();
+  }
+
+  BinTreePosition& operator--() {
+    return (*this = left());
+  }
+
+  BinTreePosition& operator++() {
+    return (*this = right());
+  }
+
+  BinTreePosition operator--(int) {
+    BinTreePosition save = *this;
+    --(*this);
+    return save;
+  }
+
+  BinTreePosition operator++(int) {
+    BinTreePosition save = *this;
+    ++(*this);
+    return save;
+  }
+
+};
+
+template <typename T>
 class BinTree {
 private:
+
+  friend class BinTreePosition<T>;
+  using P = BinTreePosition<T>;
 
   using BTN = BinTreeNode<T>;
 
