@@ -1,8 +1,12 @@
+#include <sstream>
+
 #include "UnitTestFramework.h"
 #include "bintree.cpp"
 
 using BITree = BinTree<int>;
 using BIPos = BinTreePosition<int>;
+using BCTree = BinTree<char>;
+using BCPos = BinTreePosition<char>;
 
 BITree createTestBinTree() {
   return BITree(1,
@@ -71,4 +75,52 @@ TEST_CASE("BinTree", BinTree_TestPosition) {
   Assert::AreEqual(*-(-p), 3);
   Assert::AreEqual(*+-p, 4);
   Assert::AreEqual(*-+p, 6);
+}
+
+TEST_CASE("BinTree", BinTree_DepthEmpty) {
+  Assert::AreEqual(depth(BIPos(BITree())), 0);
+}
+
+TEST_CASE("BinTree", BinTree_DepthTestTree) {
+  Assert::AreEqual(depth(BIPos(createTestBinTree())), 3);
+}
+
+TEST_CASE("BinTree", BinTree_Equal) {
+  Assert::IsTrue(createTestBinTree() == createTestBinTree());
+}
+
+TEST_CASE("BinTree", BinTree_NotEqual) {
+  Assert::IsFalse(createTestBinTree() == BITree());
+}
+
+TEST_CASE("BinTree", BinTree_TestExpressionDigit) {
+  std::istringstream expr("2");
+  BCTree t = createExpressionTree(expr);
+  BCPos p = t;
+  Assert::AreEqual(*p, '2');
+  Assert::IsTrue(!-p && !+p);
+}
+
+TEST_CASE("BinTree", BinTree_TestSimpleExpression) {
+  std::istringstream expr("(3+4)");
+  BCTree t = createExpressionTree(expr);
+  BCPos p = t;
+  Assert::AreEqual(*p, '+');
+  Assert::AreEqual(*-p, '3');
+  Assert::AreEqual(*+p, '4');
+}
+
+TEST_CASE("BinTre", BinTree_CalculateExpressionDigit) {
+  std::istringstream expr("2");
+  Assert::AreEqual(calculateExpressionTree(createExpressionTree(expr).rootpos()), 2);
+}
+
+TEST_CASE("BinTre", BinTree_CalculateSimpleExpression) {
+  std::istringstream expr("(3+4)");
+  Assert::AreEqual(calculateExpressionTree(createExpressionTree(expr).rootpos()), 7);
+}
+
+TEST_CASE("BinTre", BinTree_CalculateComplexExpression) {
+  std::istringstream expr("((3+4)*(2-5))");
+  Assert::AreEqual(calculateExpressionTree(createExpressionTree(expr).rootpos()), -21);
 }

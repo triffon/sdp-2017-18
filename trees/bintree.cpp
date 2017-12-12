@@ -1,3 +1,6 @@
+#ifndef __BINTREE_CPP
+#define __BINTREE_CPP
+
 #include <iostream>
 
 template <typename T>
@@ -28,7 +31,7 @@ public:
 
   BinTreePosition() : ptr(nullptr) {}
   
-  BinTreePosition(BinTree<T>& bt) : ptr(bt.rootptr) {}
+  BinTreePosition(BinTree<T> const& bt) : ptr(bt.rootptr) {}
 
   bool valid() const {
     return ptr != nullptr;
@@ -153,6 +156,11 @@ public:
     eraseNode(rootptr);
   }
 
+  // позицията към корена
+  P rootpos() {
+    return P(*this);
+  }
+
   // присвоява възли от друго дърво
   void assignFrom(BTN*& to, BTN*& from) {
     // изтриваме старата стойност на to
@@ -212,3 +220,61 @@ public:
     os << "}\n";
   }
 };
+
+template <typename T>
+bool equalTrees(BinTreePosition<T> p1, BinTreePosition<T> p2) {
+  return !p1 && !p2 ||
+    p1 && p2 && *p1 == *p2 &&
+    equalTrees(-p1, -p2) &&
+    equalTrees(+p1, +p2);
+}
+
+template <typename T>
+bool operator==(BinTree<T> const& t1, BinTree<T> const& t2) {
+  return equalTrees(BinTreePosition<T>(t1), BinTreePosition<T>(t2));
+}
+
+template <typename T>
+int depth(BinTreePosition<T> p) {
+  if (!p)
+    return 0;
+  return 1 + std::max(depth(-p), depth(+p));
+}
+
+/*
+  <израз> ::= <цифра> | (<израз><операция><израз>)
+  Считаме, че изразът е коректно зададен
+*/
+BinTree<char> createExpressionTree(std::istream& is) {
+  char c;
+  is >> c;
+  if (std::isdigit(c))
+    return BinTree<char>(c);
+  // c == '('
+  BinTree<char> leftTree = createExpressionTree(is);
+  is >> c;
+  // c е операцията
+  BinTree<char> rightTree = createExpressionTree(is);
+  // пропускаме затварящата скоба
+  is.get();
+  return BinTree<char>(c, leftTree, rightTree);
+}
+
+int applyOperation(char op, int larg, int rarg) {
+  switch (op) {
+  case '+' : return larg + rarg;
+  case '-' : return larg - rarg;
+  case '*' : return larg * rarg;
+  case '/' : return larg / rarg;
+  case '^' : return pow(larg, rarg);
+  }
+  return 0;
+}
+
+int calculateExpressionTree(BinTreePosition<char> p) {
+  if (std::isdigit(*p))
+    return *p - '0';
+  return applyOperation(*p, calculateExpressionTree(-p), calculateExpressionTree(+p));
+}
+
+#endif
