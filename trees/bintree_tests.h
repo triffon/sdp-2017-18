@@ -4,27 +4,17 @@
 using BITree = BinTree<int>;
 
 BITree createTestBinTree() {
-  BITree e;
   BITree t(1,
-           BITree(2,
-                  BITree(3,e,e),
-                  BITree(4,e,e)),
-           BITree(5,
-                  BITree(6,e,e),
-                  e));
+           BITree(2, 3, 4),
+           BITree(5, 6));
   return t;
 }
 
 BITree* createTestBinTreeOnHeap() {
-  BITree e;
   BITree* t = new BITree
     (1,
-     BITree(2,
-            BITree(3,e,e),
-            BITree(4,e,e)),
-     BITree(5,
-            BITree(6,e,e),
-            e));
+     BITree(2, 3, 4),
+     BITree(5, 6));
   return t;
 }
 

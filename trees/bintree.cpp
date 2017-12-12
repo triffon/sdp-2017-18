@@ -30,6 +30,7 @@ private:
   BTN* copyNode(BTN* node) const {
     if (node == nullptr)
       return nullptr;
+    // std::clog << "Creating copy of node " << node->data << "\n";
     return new BTN(node->data,
                    copyNode(node->left),
                    copyNode(node->right));
@@ -39,6 +40,7 @@ private:
     if (node != nullptr) {
       eraseNode(node->left);
       eraseNode(node->right);
+      //      std::clog << "Erasing node " << node->data << "\n";
       delete node;
     }
   }
@@ -75,6 +77,38 @@ public:
     eraseNode(rootptr);
   }
 
+  // присвоява възли от друго дърво
+  void assignFrom(BTN*& to, BTN*& from) {
+    // изтриваме старата стойност на to
+    eraseNode(to);
+    // присвояваме си неговото поддърво
+    to = from;
+    // и го нулираме, за да не го управлява вече
+    from = nullptr;
+  }
+
+  // O(n) по време и по памет
+  // конструктор, който краде от lvalues
+  BinTree(T const& data,
+          BinTree& lt,
+          BinTree& rt) {
+    rootptr = new BTN(data);
+    assignFrom(rootptr->left, lt.rootptr);
+    assignFrom(rootptr->right, rt.rootptr);
+  }
+  
+  // O(1) по време и по памет
+  // конструктор, който краде от rvalues
+  BinTree(T const& data,
+          BinTree&& lt = BinTree(),
+          BinTree&& rt = BinTree()) {
+    rootptr = new BTN(data);
+    assignFrom(rootptr->left, lt.rootptr);
+    assignFrom(rootptr->right, rt.rootptr);
+  }
+
+  // O(1) по време и по памет
+  // конструктор, който копира
   BinTree(T const& data,
           BinTree const& lt,
           BinTree const& rt) {
@@ -83,6 +117,7 @@ public:
                       copyNode(rt.rootptr));
   }
 
+  
   bool empty() const {
     return rootptr == nullptr;
   }
