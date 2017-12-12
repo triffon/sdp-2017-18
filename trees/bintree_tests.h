@@ -5,18 +5,16 @@ using BITree = BinTree<int>;
 using BIPos = BinTreePosition<int>;
 
 BITree createTestBinTree() {
-  BITree t(1,
-           BITree(2, 3, 4),
-           BITree(5, 6));
-  return t;
+  return BITree(1,
+                BITree(2, 3, 4),
+                BITree(5, 6));
 }
 
 BITree* createTestBinTreeOnHeap() {
-  BITree* t = new BITree
+  return new BITree
     (1,
      BITree(2, 3, 4),
      BITree(5, 6));
-  return t;
 }
 
 
@@ -71,6 +69,6 @@ TEST_CASE("BinTree", BinTree_TestPosition) {
   Assert::AreEqual(*-p, 2);
   Assert::AreEqual(*+p, 5);
   Assert::AreEqual(*-(-p), 3);
-  Assert::AreEqual(*+(-p), 4);
-  Assert::AreEqual(*-(+p), 6);
+  Assert::AreEqual(*+-p, 4);
+  Assert::AreEqual(*-+p, 6);
 }
