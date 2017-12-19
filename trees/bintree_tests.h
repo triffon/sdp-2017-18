@@ -49,7 +49,7 @@ TEST_CASE("BinTree", BinTree_CountNodesTestTreeOnHeap) {
 }
 
 TEST_CASE("BinTree", BinTree_CountNodeNewDelete) {
-  BITree* t1 = createTestBinTreeOnHeap();  
+  BITree* t1 = createTestBinTreeOnHeap();
   BITree* t2 = createTestBinTreeOnHeap();
   BITree* t = new BITree(0, *t1, *t2);
   delete t1;
@@ -110,17 +110,17 @@ TEST_CASE("BinTree", BinTree_TestSimpleExpression) {
   Assert::AreEqual(*+p, '4');
 }
 
-TEST_CASE("BinTre", BinTree_CalculateExpressionDigit) {
+TEST_CASE("BinTree", BinTree_CalculateExpressionDigit) {
   std::istringstream expr("2");
   Assert::AreEqual(calculateExpressionTree(createExpressionTree(expr).rootpos()), 2);
 }
 
-TEST_CASE("BinTre", BinTree_CalculateSimpleExpression) {
+TEST_CASE("BinTree", BinTree_CalculateSimpleExpression) {
   std::istringstream expr("(3+4)");
   Assert::AreEqual(calculateExpressionTree(createExpressionTree(expr).rootpos()), 7);
 }
 
-TEST_CASE("BinTre", BinTree_CalculateComplexExpression) {
+TEST_CASE("BinTree", BinTree_CalculateComplexExpression) {
   std::istringstream expr("((3+4)*(2-5))");
   Assert::AreEqual(calculateExpressionTree(createExpressionTree(expr).rootpos()), -21);
 }
