@@ -37,3 +37,15 @@ TEST_CASE("Heap", Heap_EnqueueDequeue) {
   }
   Assert::IsTrue(h.empty());
 }
+
+// Пирамидално сортиране (heap sort)
+TEST_CASE("Heap", Heap_BuildDequeue) {
+  int a[10] = { 5, 7, 2, 4, 8, 9, 6, 3, 0, 1 };
+  TestHeap h(10, a);
+  for(int i = 9; i >= 0; i--)
+    Assert::AreEqual(h.dequeue(), i);
+  Assert::IsTrue(h.empty());
+  int const* b = h.toArray();
+  for(int i = 0; i < 10; i++)
+    Assert::AreEqual(b[i], i);
+}
