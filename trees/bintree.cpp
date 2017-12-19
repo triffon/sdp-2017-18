@@ -22,31 +22,34 @@ class BinTree;
 template <typename T>
 class BinTreePosition {
 private:
+  friend class BinTree<T>;
   using BTN = BinTreeNode<T>;
 
-  BTN* ptr;
+  BTN** ptr;
 
-  BinTreePosition(BTN* _ptr) : ptr(_ptr) {}
+  BinTreePosition(BTN*& node) : ptr(&node) {}
 public:
 
   BinTreePosition() : ptr(nullptr) {}
   
-  BinTreePosition(BinTree<T> const& bt) : ptr(bt.rootptr) {}
+  BinTreePosition(BinTree<T>& bt) : ptr(&bt.rootptr) {}
+  
+  BinTreePosition(BinTree<T>&& bt) : ptr(&bt.rootptr) {}
 
   bool valid() const {
-    return ptr != nullptr;
+    return ptr != nullptr && *ptr != nullptr;
   }
 
   T& get() const {
-    return ptr->data;
+    return (*ptr)->data;
   }
 
   BinTreePosition left() const {
-    return BinTreePosition(ptr->left);
+    return BinTreePosition((*ptr)->left);
   }
 
   BinTreePosition right() const {
-    return BinTreePosition(ptr->right);
+    return BinTreePosition((*ptr)->right);
   }
 
   // синтактична захар
@@ -91,10 +94,11 @@ public:
 
 template <typename T>
 class BinTree {
-private:
-
+public:
   friend class BinTreePosition<T>;
   using P = BinTreePosition<T>;
+
+protected:
 
   using BTN = BinTreeNode<T>;
 
@@ -171,6 +175,10 @@ public:
     from = nullptr;
   }
 
+  void assignFrom(P to, P from) {
+    assignFrom(*to.ptr, *from.ptr);
+  }
+
   // O(n) по време и по памет
   // конструктор, който краде от lvalues
   BinTree(T const& data,
@@ -230,7 +238,12 @@ bool equalTrees(BinTreePosition<T> p1, BinTreePosition<T> p2) {
 }
 
 template <typename T>
-bool operator==(BinTree<T> const& t1, BinTree<T> const& t2) {
+bool operator==(BinTree<T>& t1, BinTree<T>& t2) {
+  return equalTrees(BinTreePosition<T>(t1), BinTreePosition<T>(t2));
+}
+
+template <typename T>
+bool operator==(BinTree<T>&& t1, BinTree<T>&& t2) {
   return equalTrees(BinTreePosition<T>(t1), BinTreePosition<T>(t2));
 }
 
