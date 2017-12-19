@@ -80,7 +80,7 @@ public:
       // пресяваме останалите елементи надолу
       for(int i = capacity/2 - 1; i >= 0; i--)
         siftDown(i);
-      printDOT(std::clog);
+      // printDOT(std::clog);
     }
   }
 
