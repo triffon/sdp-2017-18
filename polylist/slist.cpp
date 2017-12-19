@@ -71,6 +71,15 @@ public:
   }
 };
 
+/*
+template <typename T>
+T* operator->(LinkedListIterator<T*>& it) {
+  return it.value();
+}
+*/
+
+// it->collect(l);
+
 std::ostream& operator<<(std::ostream& os, SElement const& se) {
   se.print(os);
   return os;

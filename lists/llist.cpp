@@ -325,6 +325,8 @@ public:
   
   // ++it <-> it = it.next(), връща новата стойност на it
   I& operator++() {
+    // ptr = ptr->next;
+    // return *this;
     return *this = next();
   }
 
