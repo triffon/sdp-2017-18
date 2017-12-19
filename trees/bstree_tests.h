@@ -11,7 +11,7 @@ TEST_CASE("BSTree", BSTree_CreateEmpty) {
 TEST_CASE("BSTree", BSTree_CreateSingle) {
   TestBSTree t;
   Assert::IsTrue(t.insert(5));
-  t.printDOT(std::clog);
+  // t.printDOT(std::clog);
   Assert::IsFalse(t.empty());
   Assert::IsTrue(t.search(5));
   Assert::IsFalse(t.search(7));

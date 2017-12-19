@@ -224,6 +224,8 @@ public:
 
   void printDOT(std::ostream& os = std::cout) {
     os << "digraph bintree {\n";
+    // извеждане на корена, в случай, че той представлява цялото дърво
+    os << root() << ";\n";
     printNodeDOT(rootptr, os);
     os << "}\n";
   }
