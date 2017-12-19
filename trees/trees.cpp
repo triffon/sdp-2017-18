@@ -1,11 +1,14 @@
 #include <fstream>
-#include "rtree_tests.h"
+//#include "rtree_tests.h"
 #include "bintree_tests.h"
+#include "heap_tests.h"
 
+/*
 void RTreeDOTTest() {
   std::ofstream of("rtree.dot");
   createTestTree().printDOT(of);
-}
+  }
+*/
 
 void BinTreeDOTTest() {
   std::ofstream of("bintree.dot");
@@ -13,7 +16,7 @@ void BinTreeDOTTest() {
 }
 
 int main() {
-  RTreeDOTTest();
+  //  RTreeDOTTest();
   BinTreeDOTTest();
   RunTests();
   return 0;
