@@ -354,14 +354,14 @@ public:
 // O(n) по време и O(1) по памет
 template <typename T>
 void append(DoubleLinkedList<T>& l1, DoubleLinkedList<T> const& l2) {
-  for(DoubleLinkedListIterator<int> it = l2.begin(); it; ++it)
+  for(DoubleLinkedListIterator<T> it = l2.begin(); it; ++it)
     l1 += *it;
 }
 
 // O(n) по време и O(1) по памет
 template <typename T>
 void reverse(DoubleLinkedList<T>& l) {
-  for(DoubleLinkedListIterator<int> nit = l.begin(), pit = l.end();
+  for(DoubleLinkedListIterator<T> nit = l.begin(), pit = l.end();
       nit != pit && nit && nit.prev() != pit;
       ++nit, --pit)
     std::swap(*nit, *pit);
@@ -369,7 +369,7 @@ void reverse(DoubleLinkedList<T>& l) {
 
 template <typename T>
 bool isPalindrome(DoubleLinkedList<T>& l) {
-  DoubleLinkedListIterator<int> nit = l.begin(), pit = l.end();
+  DoubleLinkedListIterator<T> nit = l.begin(), pit = l.end();
   while (nit && nit != pit && nit.prev() != pit && *nit == *pit) {
     ++nit;
     --pit;
