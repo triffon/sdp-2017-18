@@ -22,6 +22,9 @@ public:
 
   // достъп до първия елемент на опашката с възможност за промяна
   virtual T& head() = 0;
+
+  // виртуален деструктор
+  virtual ~Queue() {}
 };
 
 template <typename T>
