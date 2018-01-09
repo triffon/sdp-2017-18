@@ -9,7 +9,7 @@ class BSTree : public BinTree<T> {
 public:
   using P = BinTreePosition<T>;
 
-private:
+protected:
   using BinTree<T>::BTN;
 
   // O(h)

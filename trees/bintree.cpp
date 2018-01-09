@@ -2,6 +2,7 @@
 #define __BINTREE_CPP
 
 #include <iostream>
+#include <cmath>
 
 template <typename T>
 struct BinTreeNode {

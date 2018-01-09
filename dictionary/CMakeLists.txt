@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.7)
+project(dictionary)
+file(GLOB SOURCES "dictionary.cpp")
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_STANDARD 11)
+include_directories(../trees ../lists ../unit-test-framework)
+add_executable(dictionary ${SOURCES})
