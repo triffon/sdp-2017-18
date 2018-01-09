@@ -52,11 +52,26 @@ public:
   K const& key()   const { return std::pair<K,V>::first; }
   V const& value() const { return std::pair<K,V>::second; }
 
-  bool operator==(KeyValuePair const& kvp) {
+  bool operator<(KeyValuePair const& kvp) const {
+    return key() < kvp.key();
+  }
+
+  bool operator>(KeyValuePair const& kvp) const {
+    return key() > kvp.key();
+  }
+
+  bool operator>=(KeyValuePair const& kvp) const {
+    return key() >= kvp.key();
+  }
+  bool operator<=(KeyValuePair const& kvp) const {
+    return key() <= kvp.key();
+  }
+
+  bool operator==(KeyValuePair const& kvp) const {
     return key() == kvp.key();
   }
 
-  bool operator!=(KeyValuePair const& kvp) {
+  bool operator!=(KeyValuePair const& kvp) const {
     return !(*this == kvp);
   }
 };
