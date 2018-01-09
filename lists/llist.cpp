@@ -401,4 +401,13 @@ void mergeSort(LinkedList<T>& l) {
   l = merge(l1, l2);
 }
 
+template <typename T>
+bool member(LinkedListIterator<T> it, T const& x) {
+  while (it && *it != x)
+    ++it;
+  // !it
+  // *it == x
+  return it;
+}
+
 #endif
