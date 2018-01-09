@@ -23,18 +23,30 @@ TEST_CASE("BSTree", BSTree_InsertTwice) {
   Assert::IsFalse(t.insert(5));
 }
 
+TestBSTree* createTestBSTree() {
+  TestBSTree* t = new TestBSTree;
+  t->insert(5);
+  t->insert(3);
+  t->insert(7);
+  t->insert(4);
+  t->insert(6);
+  t->insert(2);
+  t->insert(1);
+  return t;
+}
+
+TEST_CASE("BSTree", BSTree_SearchAll) {
+  TestBSTree* t = createTestBSTree();
+  //  t.printDOT(std::clog);
+  for(int i = 1; i <= 7; i++)
+    Assert::IsTrue(t->search(i));
+}
 
 TEST_CASE("BSTree", BSTree_CollectSorted) {
-  TestBSTree t;
-  t.insert(5);
-  t.insert(3);
-  t.insert(7);
-  t.insert(4);
-  t.insert(6);
-  t.insert(2);
-  t.insert(1);
+  TestBSTree* t = createTestBSTree();
+  //  t.printDOT(std::clog);
   LinkedList<int> l;
-  t.collect(l);
+  t->collect(l);
   int i = 1;
   for(LinkedListIterator<int> it = l.begin(); it; ++it, ++i)
     Assert::AreEqual(*it, i);
