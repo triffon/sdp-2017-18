@@ -52,3 +52,16 @@ TEST_CASE("BSTree", BSTree_CollectSorted) {
     Assert::AreEqual(*it, i);
   Assert::AreEqual(i, 8);
 }
+
+TEST_CASE("BSTree", BSTree_RemoveAll) {
+  TestBSTree* t = createTestBSTree();
+  int toRemove[] = { 4, 2, 7, 1, 5, 3, 6 };
+  for(int i = 0; i < 7; i++) {
+    int x = toRemove[i];
+    Assert::IsTrue(t->search(x));
+    Assert::IsTrue(t->remove(x));
+    Assert::IsFalse(t->search(x));
+    Assert::IsFalse(t->remove(x));
+  }
+  Assert::IsTrue(t->empty());
+}

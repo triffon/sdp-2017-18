@@ -167,12 +167,14 @@ public:
 
   // присвоява възли от друго дърво
   void assignFrom(BTN*& to, BTN*& from) {
-    // изтриваме старата стойност на to
-    eraseNode(to);
+    // запазваме старата стойност на to, за да я изтрием
+    BTN* toDelete = to;
     // присвояваме си неговото поддърво
     to = from;
     // и го нулираме, за да не го управлява вече
     from = nullptr;
+    // изтриваме старата стойност
+    eraseNode(toDelete);
   }
 
   void assignFrom(P to, P from) {
