@@ -1,6 +1,8 @@
 #ifndef _GRAPH_CPP
 #define _GRAPH_CPP
 
+#include <iostream>
+
 #include "bstree_dictionary.cpp"
 
 template <typename V>
@@ -36,6 +38,16 @@ public:
       return false;
     g[u].insertEnd(v);
     return true;
+  }
+
+  bool printDOT(std::ostream& os = std::cout) {
+    os << "digraph g {\n";
+    for(V v : vertices()) {
+      os << v << ";\n";
+      for(I it = successors(v); it; ++it)
+        os << v << " -> " << *it << ";\n";
+    }
+    os << "}\n";
   }
 };
 
