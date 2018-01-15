@@ -1,6 +1,8 @@
 #include "UnitTestFramework.h"
 #include "bstree_dictionary.cpp"
 
+#include <algorithm>
+
 using TestDictionary = BSTreeDictionary<int, int>;
 
 TEST_CASE("Dictionary", Dictionary_CreateEmptyKeysValues) {
@@ -37,6 +39,7 @@ TEST_CASE("Dictionary", Dictionary_KeysAll) {
   TestDictionary* d = createTestDictionary();
   std::vector<int> keys = d->keys();
   Assert::AreEqual(keys.size(), 10);
+  std::sort(keys.begin(), keys.end());
   for(int i = 1; i <= 10; i++)
     Assert::AreEqual(keys[i-1], i);
 }
@@ -45,6 +48,7 @@ TEST_CASE("Dictionary", Dictionary_ValuesAll) {
   TestDictionary* d = createTestDictionary();
   std::vector<int> values = d->values();
   Assert::AreEqual(values.size(), 10);
+  std::sort(values.begin(), values.end());
   for(int i = 1; i <= 10; i++)
     Assert::AreEqual(values[i-1], i * i);
 }
