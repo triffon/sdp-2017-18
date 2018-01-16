@@ -1,9 +1,15 @@
 #include "UnitTestFramework.h"
 #include "bstree_dictionary.cpp"
+#include "hash.cpp"
 
 #include <algorithm>
 
-using TestDictionary = BSTreeDictionary<int, int>;
+int testhash(int const& key) {
+  return 7 * key + 1;
+}
+
+// using TestDictionary = BSTreeDictionary<int, int>;
+using TestDictionary = LinkedHashTable<int, int, testhash>;
 
 TEST_CASE("Dictionary", Dictionary_CreateEmptyKeysValues) {
   TestDictionary d;
