@@ -71,16 +71,16 @@ TEST_CASE("Graph", Graph_Successors) {
   TestGraph* g = createTestGraph();
   int i = 0;
   for(TestGraph::I it = g->successors(1); it; i += *it++)
-    Assert::IsTrue(*it == 2 && *it == 3);
+    Assert::IsTrue(*it == 2 || *it == 3);
   Assert::AreEqual(i, 5);
   i = 0;
   for(TestGraph::I it = g->successors(2); it; i += *it++)
-    Assert::IsTrue(*it == 3 && *it == 6);
+    Assert::IsTrue(*it == 3 || *it == 6);
   Assert::AreEqual(i, 9);
   i = 0;
   for(TestGraph::I it = g->successors(3); it; i += *it++)
-    Assert::IsTrue(*it == 4 && *it == 6);
-  Assert::AreEqual(i, 10);  
+    Assert::IsTrue(*it == 4 || *it == 6);
+  Assert::AreEqual(i, 10);
 }
 
 TEST_CASE("Graph", Graph_NoSuccessorsEmpty) {
@@ -174,4 +174,3 @@ TEST_CASE("Graph", Graph_allPathsBFS) {
     Assert::IsTrue(isPath(*g, *it));
   }
 }
-
