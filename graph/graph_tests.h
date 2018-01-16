@@ -164,3 +164,14 @@ TEST_CASE("Graph", Graph_allPathsDFS) {
   }
 }
 
+TEST_CASE("Graph", Graph_allPathsBFS) {
+  TestGraph* g = createTestGraph();
+  TestPaths paths = allPathsBFS(*g, 1, 6);
+  for(TestPaths::I it = paths.begin(); it; ++it) {
+    Assert::IsFalse((*it).empty());
+    // printPath(*it);
+    Assert::AreEqual((*it).peek(), 6);
+    Assert::IsTrue(isPath(*g, *it));
+  }
+}
+

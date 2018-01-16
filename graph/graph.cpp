@@ -252,5 +252,43 @@ Paths<V> allPathsDFS(Graph<V>& g, V const& u, V const& v) {
   return paths;
 }
 
+template <typename V>
+bool inPath(Path<V> path, V const& u) {
+  while (!path.empty())
+    if (path.pop() == u)
+      return true;
+  return false;
+}
+
+template <typename V>
+Paths<V> allPathsBFS(Graph<V>& g, V const& u, V const& v) {
+  LQueue<Path<V>> q;
+  Paths<V> paths;
+  Path<V> path;
+  path.push(u);
+  q.enqueue(path);
+  V w = u;
+  while (!q.empty()) {
+    path = q.dequeue();
+    // printPath(path);
+    // path е текущия път, който се опитваме да разширим
+    for(VI<V> it = g.successors(path.peek()); it; ++it)
+      // *it е наследникът, с който се опитваме да разширим path
+      if (!inPath(path, *it)) {
+        // разширяваме path
+        path.push(*it);
+        if (v == *it)
+          // добавяме го в резултата, ако е този, който търсим
+          paths.insertEnd(path);
+        // добавяме го в нивото
+        q.enqueue(path);
+        // махаме последния добавен връх, за да се подготвим за
+        // следващо възможно разширение
+        path.pop();
+      }
+  }
+  return paths;
+}
+
 
 #endif
