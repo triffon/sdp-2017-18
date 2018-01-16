@@ -2,10 +2,12 @@
 #define _GRAPH_CPP
 
 #include <iostream>
+#include <utility>
 
 #include "bstree_dictionary.cpp"
 #include "set.cpp"
 #include "lstack.cpp"
+#include "lqueue.cpp"
 
 template <typename V>
 class Graph {
@@ -91,6 +93,27 @@ template <typename V>
 using VSet = Set<V, BSTreeDictionary>;
 
 template <typename V>
+bool isPath(Graph<V>& g, Path<V> path) {
+  if (path.empty())
+    return true;
+  V u = path.pop();
+  while (!path.empty()) {
+    V v = path.peek();
+    if (!g.isEdge(v, u))
+      return false;
+    u = path.pop();
+  }
+  return true;
+}
+
+template <typename V>
+void printPath(Path<V> path) {
+  while (!path.empty())
+    std::clog << path.pop() << ' ';
+  std::clog << '\n';                              
+}
+
+template <typename V>
 bool hasPathDFSrec(Graph<V>& g, V const& u, V const& v, VSet<V>& visited) {
   if (u == v)
     return true;
@@ -106,6 +129,127 @@ template <typename V>
 bool hasPathDFS(Graph<V>& g, V const& u, V const& v) {
   VSet<V> visited;
   return hasPathDFSrec(g, u, v, visited);
+}
+
+
+template <typename V>
+bool findPathDFSrec(Graph<V>& g, V const& u, V const& v,
+                    VSet<V>& visited,
+                    Path<V>& path) {
+  path.push(u);
+  // std::clog << "Обхождаме " << u << std::endl;
+  if (u == v)
+    return true;
+  visited.insert(u);
+  for(VI<V> it = g.successors(u); it; ++it) {
+    // w = *it
+    //    std::clog << "Наследник " << *it << std::endl;
+    if (!visited.contains(*it) && findPathDFSrec(g, *it, v, visited, path))
+      return true;
+  }
+  //  std::clog << "Отказваме се от " << u << std::endl;
+  path.pop();
+  return false;
+}
+
+template <typename V>
+Path<V> findPathDFS(Graph<V>& g, V const& u, V const& v) {
+  VSet<V> visited;
+  Path<V> path;
+  findPathDFSrec(g, u, v, visited, path);
+  return path;
+}
+
+template <typename V>
+bool hasPathBFS(Graph<V>& g, V const& u, V const& v) {
+  VSet<V> visited;
+  LQueue<V> q;
+  q.enqueue(u);
+  V w = u;
+  while (!q.empty() && (v != (w = q.dequeue()))) {
+    visited.insert(w);
+    
+    for(VI<V> it = g.successors(w); it; ++it)
+      if (!visited.contains(*it))
+        q.enqueue(*it);
+  }
+  // q.empty() || v == w
+  return v == w;
+}
+
+template <typename V>
+using Edge = std::pair<V, V>;
+
+template <typename V>
+Path<V> findPathBFS(Graph<V>& g, V const& u, V const& v) {
+  VSet<V> visited;
+  LQueue<V> q;
+  LinkedStack<Edge<V>> edges;
+  q.enqueue(u);
+  visited.insert(u);
+  V w = u;
+  while (!q.empty() && (v != (w = q.dequeue()))) {    
+    for(VI<V> it = g.successors(w); it; ++it)
+      // w -> *it
+      if (!visited.contains(*it)) {
+        q.enqueue(*it);
+        visited.insert(*it);
+        edges.push({ w, *it });
+        // std::clog << w << " -> " << *it << std::endl;
+      }
+  }
+  // q.empty() || v == w
+  Path<V> path;
+  if (v != w)
+    return path;
+  // v == w
+  while (!edges.empty()) {
+    Edge<V> e = edges.pop();
+    if (w == e.second) {
+      path.push(w);
+      w = e.first;
+    }
+  }
+  path.push(u);
+  // обръщаме стека
+  Path<V> result;
+  while (!path.empty())
+    result.push(path.pop());
+  return result;
+}
+
+template <typename V>
+using Paths = LinkedList<Path<V>>;
+
+template <typename V>
+void allPathsDFSrec(Graph<V>& g, V const& u, V const& v,
+                    VSet<V>& visited,
+                    Path<V>& path,
+                    Paths<V>& paths) {
+  path.push(u);
+  if (u == v)
+    // намерихме още един път, записваме си го
+    paths.insertEnd(path);
+  else {
+    visited.insert(u);
+    for(VI<V> it = g.successors(u); it; ++it) {
+      // w = *it
+      if (!visited.contains(*it))
+        allPathsDFSrec(g, *it, v, visited, path, paths);
+    }
+    // искаме да позволим повтарянето на върхове!!!
+    visited.remove(u);
+  }
+  path.pop();
+}
+
+template <typename V>
+Paths<V> allPathsDFS(Graph<V>& g, V const& u, V const& v) {
+  VSet<V> visited;
+  Path<V> path;
+  Paths<V> paths;
+  allPathsDFSrec(g, u, v, visited, path, paths);
+  return paths;
 }
 
 

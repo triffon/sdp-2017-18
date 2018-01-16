@@ -5,6 +5,8 @@
 #include "graph.cpp"
 
 using TestGraph = Graph<int>;
+using TestPath = Path<int>;
+using TestPaths = Paths<int>;
 
 TestGraph* createTestGraph() {
   TestGraph* g = new TestGraph;
@@ -122,5 +124,43 @@ TEST_CASE("Graph", Graph_hasPathDFS) {
       Assert::IsTrue(hasPathDFS(*g, i, j));
       Assert::IsTrue(hasPathDFS(*g, j, i));
     }
+}
+
+TEST_CASE("Graph", Graph_hasPathBFS) {
+  TestGraph* g = createTestGraph();
+  for(int i = 1; i <= 6; i++)
+    for(int j = i + 1; j <= 6; j++) {
+      Assert::IsTrue(hasPathBFS(*g, i, j));
+      Assert::IsTrue(hasPathBFS(*g, j, i));
+    }
+}
+
+TEST_CASE("Graph", Graph_findPathDFS) {
+  TestGraph* g = createTestGraph();
+  TestPath path = findPathDFS(*g, 1, 6);
+  Assert::IsFalse(path.empty());
+  // printPath(path);
+  Assert::AreEqual(path.peek(), 6);
+  Assert::IsTrue(isPath(*g, path));
+}
+
+TEST_CASE("Graph", Graph_findPathBFS) {
+  TestGraph* g = createTestGraph();
+  TestPath path = findPathBFS(*g, 1, 6);
+  Assert::IsFalse(path.empty());
+  // printPath(path);
+  Assert::AreEqual(path.peek(), 6);
+  Assert::IsTrue(isPath(*g, path));
+}
+
+TEST_CASE("Graph", Graph_allPathsDFS) {
+  TestGraph* g = createTestGraph();
+  TestPaths paths = allPathsDFS(*g, 1, 6);
+  for(TestPaths::I it = paths.begin(); it; ++it) {
+    Assert::IsFalse((*it).empty());
+    // printPath(*it);
+    Assert::AreEqual((*it).peek(), 6);
+    Assert::IsTrue(isPath(*g, *it));
+  }
 }
 
