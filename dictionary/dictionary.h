@@ -37,6 +37,9 @@ public:
   // списък от стойности
   virtual std::vector<V> values() = 0;
 
+  // проверка за празнота
+  virtual bool empty() = 0;
+
   virtual ~Dictionary() {}
 };
 

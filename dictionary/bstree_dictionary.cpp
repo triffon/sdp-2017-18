@@ -51,6 +51,10 @@ public:
       result.push_back((*i).value());
     return result;
   }
+
+  bool empty() {
+    return !BST::rootpos();
+  }
 };
 
 #endif
