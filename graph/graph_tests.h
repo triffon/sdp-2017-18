@@ -80,3 +80,47 @@ TEST_CASE("Graph", Graph_Successors) {
     Assert::IsTrue(*it == 4 && *it == 6);
   Assert::AreEqual(i, 10);  
 }
+
+TEST_CASE("Graph", Graph_NoSuccessorsEmpty) {
+  Assert::IsTrue(noSuccessors(*createTestGraph()).empty());
+}
+
+TEST_CASE("Graph", Graph_NoSuccessorsTest) {
+  TestGraph g;
+  g.addVertex(1);
+  g.addVertex(2);
+  g.addEdge(1, 2);
+  std::vector<int> ns = noSuccessors(g);
+  Assert::AreEqual(ns.size(), 1);
+  Assert::AreEqual(ns[0], 2);
+}
+
+TEST_CASE("Graph", Graph_PredecessorsTest) {
+  std::vector<int> pred = predecessors(*createTestGraph(), 2);
+  Assert::AreEqual(pred.size(), 1);
+  Assert::AreEqual(pred[0], 1);
+}
+
+TEST_CASE("Graph", Graph_IsNotSymmetric) {
+  Assert::IsFalse(isSymmetric(*createTestGraph()));
+}
+
+TEST_CASE("Graph", Graph_IsSymmetric) {
+  TestGraph g;
+  g.addVertex(1);
+  g.addVertex(2);
+  g.addVertex(3);
+  g.addEdge(1, 2);
+  g.addEdge(2, 1);
+  Assert::IsTrue(isSymmetric(g));
+}
+
+TEST_CASE("Graph", Graph_hasPathDFS) {
+  TestGraph* g = createTestGraph();
+  for(int i = 1; i <= 6; i++)
+    for(int j = i + 1; j <= 6; j++) {
+      Assert::IsTrue(hasPathDFS(*g, i, j));
+      Assert::IsTrue(hasPathDFS(*g, j, i));
+    }
+}
+
