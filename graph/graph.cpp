@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "bstree_dictionary.cpp"
+#include "hash.cpp"
 #include "set.cpp"
 #include "lstack.cpp"
 #include "lqueue.cpp"
@@ -12,7 +13,8 @@
 template <typename V>
 class Graph {
 private:
-  BSTreeDictionary<V, LinkedList<V>> g;
+  // BSTreeDictionary<V, LinkedList<V>> g;
+  LinkedHashTable<V, LinkedList<V>> g;
 
 public:
 
@@ -89,8 +91,12 @@ bool isSymmetric(Graph<V>& g) {
 template <typename V>
 using Path = LinkedStack<V>;
 
+template <typename K, typename V>
+using DefaultLinkedHashTable = LinkedHashTable<K, V, defaultHashFunction>;
+
 template <typename V>
-using VSet = Set<V, BSTreeDictionary>;
+//using VSet = Set<V, BSTreeDictionary>;
+using VSet = Set<V, DefaultLinkedHashTable>;
 
 template <typename V>
 bool isPath(Graph<V>& g, Path<V> path) {
