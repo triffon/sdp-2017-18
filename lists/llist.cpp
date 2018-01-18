@@ -239,7 +239,20 @@ public:
   }
 
   void reverse() {
-    // TODO: да се реализира обръщане на място
+    LLE* prev = nullptr;		
+    LLE* cur = front;
+    LLE* next ;
+	  
+    while (cur != nullptr) {
+      next = cur->next;
+      cur->next = prev;
+      prev = cur;
+      cur = next;
+    }
+
+    LLE* temp = front;
+    front = back;
+    back = temp;
   }
 
   // O(n) по време и O(1) по сложност
